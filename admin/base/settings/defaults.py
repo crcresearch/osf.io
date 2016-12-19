@@ -10,7 +10,7 @@ from api.base.settings import *  # noqa
 # TODO ALL SETTINGS FROM API WILL BE IMPORTED AND WILL NEED TO BE OVERRRIDEN
 # TODO THIS IS A STEP TOWARD INTEGRATING ADMIN & API INTO ONE PROJECT
 
-# import local  # Build own local.py (used with postgres)
+import local  # Build own local.py (used with postgres)
 
 # TODO - remove duplicated items, as this is now using settings from the API
 
@@ -185,6 +185,28 @@ TEMPLATES = [
             ],
         }
     }]
+
+# Database
+# Postgres:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': local.POSTGRES_NAME,
+        'USER': local.POSTGRES_USER,
+        'PASSWORD': local.POSTGRES_PASSWORD,
+        'HOST': local.POSTGRES_HOST,
+        'PORT': local.POSTGRES_PORT,
+    }
+}
+# Postgres settings in local.py
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 ROOT_URLCONF = 'admin.base.urls'
 WSGI_APPLICATION = 'admin.base.wsgi.application'
