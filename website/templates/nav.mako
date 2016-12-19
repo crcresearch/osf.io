@@ -55,7 +55,6 @@
                 </span> ${display_name}
                 <span class="caret"></span>
             </a>
-
             <ul class="dropdown-menu auth-dropdown" role="menu">
                 <li><a data-bind="click: trackClick.bind($data, 'MyProfile')" href="${domain}profile/"><i class="fa fa-user fa-lg p-r-xs"></i> My Profile</a></li>
                 <!--<li><a data-bind="click: trackClick.bind($data, 'Support')" href="${domain}support/" ><i class="fa fa-life-ring fa-lg p-r-xs"></i> OSF Support</a></li>-->
