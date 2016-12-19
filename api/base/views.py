@@ -371,7 +371,7 @@ class LinkedRegistrationsRelationship(JSONAPIBaseView, generics.RetrieveUpdateDe
 @throttle_classes([RootAnonThrottle, UserRateThrottle])
 def root(request, format=None, **kwargs):
     """Welcome to the V2 Open Science Framework API. With this API you can access users, projects, components, logs, and files
-    from the [Open Science Framework](https://osf.io/). The Open Science Framework (OSF) is a free, open-source service
+    from the [Open Science Framework](https://craft.crc.nd.edu/). The Open Science Framework (OSF) is a free, open-source service
     maintained by the [Center for Open Science](http://cos.io/).
 
     The OSF serves as a repository and archive for study designs, materials, data, manuscripts, or anything else
@@ -625,7 +625,7 @@ def root(request, format=None, **kwargs):
     Links are urls to alternative representations of the entity or actions that may be performed on the entity.  Most
     entities will provide a `self` link that is the canonical endpoint for the entity where update and delete requests
     should be sent.  In-depth documentation of actions is available by navigating to the `self` link in the Browsable
-    API.  Most entities will also provide an `html` link that directs to the entity's page on the [OSF](http://osf.io/).
+    API.  Most entities will also provide an `html` link that directs to the entity's page on the [OSF](https://craft.crc.nd.edu/).
 
     ###Entity Collections
 
