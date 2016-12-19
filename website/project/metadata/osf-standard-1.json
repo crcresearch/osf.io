@@ -1,6 +1,5 @@
 {
-    "name": "OSF-Standard Pre-Data Collection Registration",
-    "active": false,
+    "name": "Standard Pre-Data Collection Registration",
     "schema": {
         "pages": [
             {

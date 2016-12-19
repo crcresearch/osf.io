@@ -14,7 +14,7 @@ After ${fullname} confirms their account, they will be able to contribute to the
 
 Hello ${fullname},
 
-You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the Open Science Framework. To set a password for your account, visit:
+You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the DARPA Craft Repository. To set a password for your account, visit:
 
 ${claim_url}
 
@@ -22,14 +22,4 @@ Once you have set a password, you will be able to make contributions to ${node.t
 
 Sincerely,
 
-The OSF Team
-
-
-Center for Open Science
-
-210 Ridge McIntire Road, Suite 500, Charlottesville, VA 22903-5083
-
-Privacy Policy: https://github.com/CenterForOpenScience/cos.io/blob/master/PRIVACY_POLICY.md
-
-
-Want more information? Visit https://osf.io/ or https://cos.io/ for information about the Open Science Framework and its supporting organization, the Center for Open Science. Questions? Email contact@osf.io.
+The CRAFT Repository Robot

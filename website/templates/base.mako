@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>OSF | ${self.title()}</title>
+    <title>Craft | ${self.title()}</title>
     % if settings.GOOGLE_SITE_VERIFICATION:
         <meta name="google-site-verification" content="${settings.GOOGLE_SITE_VERIFICATION}" />
     % endif
@@ -63,31 +63,10 @@
     <meta name="citation_public_url" content="${self.url_meta()}" />
     <meta name="citation_publication_date" content="${self.datecreated_meta()}" />
 
-    <!-- Facebook display -->
-    <meta property="og:ttl" content="3" />
-    <meta property="og:site_name" content="Open Science Framework" />
-    <meta property="og:url" content="${self.url_meta()}" />
-    <meta property="og:title" content="${self.title_meta()}" />
-    <meta property="og:description" content="${self.description_meta()}" />
-    <meta property="og:image" content="${self.image_meta()}" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Open Science Framework" />
-
-    %for author in self.authors_meta()[:10]:
-        <meta name="dc.creator" content="${author}" />
-        <meta name="citation_author" content="${author}" />
-    %endfor
-    %for tag in self.keywords_meta()[:10]:
-        <meta name="citation_keywords" content="${tag}" />
-        <meta name="dc.subject" content="${tag}" />
-    %endfor
-
-    <!-- Twitter display -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@OSFramework">
-    <meta name="twitter:creator" content="@OSFramework">
+    <!-- <meta name="og:image" content="/static/favicon.ico"/> -->
+    <meta name="og:title" content="${self.title()}"/>
+    <meta name="og:ttl" content="3"/>
+    <meta name="og:description" content="${self.og_description()}"/>
 
     ${includes_top()}
     ${self.stylesheets()}
@@ -150,7 +129,7 @@
             <div class='col-sm-10 col-xs-12'>
                 <a data-bind="click: dismiss" class="close" href="#">&times;</a>
                 <h1>Start managing your projects on the OSF today.</h1>
-                <p>Free and easy to use, the Open Science Framework supports the entire research lifecycle: planning, execution, reporting, archiving, and discovery.</p>
+                <p>Free and easy to use, the DARPA Craft Repository supports the entire research lifecycle: planning, execution, reporting, archiving, and discovery.</p>
                 <div>
                     <a data-bind="click: trackClick.bind($data, 'Create Account')" class="btn btn-primary" href="${web_url_for('index')}#signUp">Create an Account</a>
 
@@ -272,7 +251,7 @@
 
 <!-- Metadata tags-->
 <%def name="description_meta()">
-    Hosted on the Open Science Framework
+    Hosted on the DARPA Craft Repository
 </%def>
 
 <%def name="title_meta()">

@@ -4,7 +4,7 @@
 
 Hello ${fullname},
 
-You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the Open Science Framework. To set a password for your account, visit:
+You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the DARPA Craft Repository. To set a password for your account, visit:
 
 ${claim_url}
 
@@ -19,16 +19,5 @@ If you are not ${fullname} or you are erroneously being associated with "${node.
 
 Sincerely,
 
-Open Science Framework Robot
+DARPA Craft Repository Robot
 
-
-Center for Open Science
-
-210 Ridge McIntire Road, Suite 500, Charlottesville, VA 22903-5083
-
-Privacy Policy: https://github.com/CenterForOpenScience/cos.io/blob/master/PRIVACY_POLICY.md
-
-
-Want more information? Visit https://osf.io/ to learn about the Open Science Framework, or https://cos.io/ for information about its supporting organization, the Center for Open Science.
-
-Questions? Email contact@osf.io

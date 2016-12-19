@@ -10,7 +10,7 @@ After ${fullname} confirms their account, they will be able to contribute to the
 
 Hello ${fullname},
 
-You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the Open Science Framework. To claim yourself as a contributor to the project, visit this url:
+You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the DARPA Craft Repository. To claim yourself as a contributor to the project, visit this url:
 
 ${claim_url}
 
@@ -18,14 +18,4 @@ Once you are logged in, you will be able to make contributions to ${node.title}.
 
 Sincerely,
 
-The OSF Team
-
-
-Center for Open Science
-
-210 Ridge McIntire Road, Suite 500, Charlottesville, VA 22903-5083
-
-Privacy Policy: https://github.com/CenterForOpenScience/cos.io/blob/master/PRIVACY_POLICY.md
-
-
-Want more information? Visit https://osf.io/ or https://cos.io/ for information about the Open Science Framework and its supporting organization, the Center for Open Science. Questions? Email contact@osf.io
+The CRAFT Repository Robot

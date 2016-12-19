@@ -97,7 +97,11 @@ def send_mail(to_addr, mail, mimetype='plain', from_addr=None, mailer=None,
     subject = mail.subject(**context)
     message = mail.text(**context) if mimetype in ('plain', 'txt') else mail.html(**context)
     # Don't use ttls and login in DEBUG_MODE
-    ttls = login = not settings.DEBUG_MODE
+    #ttls = login = not settings.DEBUG_MODE
+    ## Don't use ttls or login regardless of DEBUG_MODE setting since they won't work when using smtp.nd.edu - MTV - 9/25/2016
+    #ttls = login = False
+    login = False
+    ttls = not settings.DEBUG_MODE
     logger.debug('Sending email...')
     logger.debug(u'To: {to_addr}\nFrom: {from_addr}\nSubject: {subject}\nMessage: {message}'.format(**locals()))
 

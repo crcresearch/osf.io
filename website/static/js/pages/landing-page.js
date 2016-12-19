@@ -12,7 +12,7 @@ $(document).ready(function() {
 // ANIMATION FOR FRONT PAGE
 $( document ).ready(function() {
     $('#logo').removeClass('off');
-    $('.youtube').YouTubeModal({autoplay:1, width:640, height:480});
+//    $('.youtube').YouTubeModal({autoplay:1, width:640, height:480});
 });
 
 var waitForFinalEvent = (function () {

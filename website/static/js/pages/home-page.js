@@ -62,16 +62,16 @@ $(document).ready(function(){
                             }))
                         ])
                     ]
-                )),
-                m('.newAndNoteworthy', m('.container',
-                    [
-                        m('.row', [
-                            m(columnSizeClass, m('h3', 'Discover Public Projects'))
-                        ]),
-                        m('.row', [
-                            m(columnSizeClass, m.component(NewAndNoteworthy, {}))
-                        ])
-
+                ))
+/*
+		m('.newAndNoteworthy', m('.container',
+                  [
+                      m('.row', [
+                          m(columnSizeClass, m('h3', 'Discover Public Projects'))
+                      ]),
+                      m('.row', [
+                          m(columnSizeClass, m.component(NewAndNoteworthy, {}))
+                      ])
                     ]
                 )),
                 /*
@@ -82,23 +82,22 @@ $(document).ready(function(){
                         ])
                     ]
                 )),
-                */
                 m('.meetings', m('.container',
                     [
                         m('.row', [
                             m(columnSizeClass,  m.component(MeetingsAndConferences, {}))
                         ])
+                  ]
+              )),
+              m('.preprints', m('.container',
+                  [
+                      m('.row', [
+                          m(columnSizeClass,  m.component(Preprints, {}))
+                      ])
 
-                    ]
-                )),
-                m('.preprints', m('.container',
-                    [
-                        m('.row', [
-                            m(columnSizeClass,  m.component(Preprints, {}))
-                        ])
-
-                    ]
-                ))
+                  ]
+              ))
+*/
             ];
         }
     };

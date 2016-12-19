@@ -1,6 +1,6 @@
 Hello ${user.fullname},
 
-Welcome to the Open Science Framework and the Preregistration Challenge. To continue, please verify your email address by visiting this link:
+Welcome to the DARPA Craft Repository and the Preregistration Challenge. To continue, please verify your email address by visiting this link:
 
 ${confirmation_url}
 

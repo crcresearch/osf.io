@@ -18,32 +18,32 @@
     <div id="home-hero">
       <div class="container text-center">
         <div class="visible-xs-block visible-sm-block visible-md-block network-bg"></div>
-        <h1 class="hero-brand">Open Science Framework</h1>
-        <h3 class="hero-tagline">A scholarly commons to connect the entire research cycle</h3>
+        <h1 class="hero-brand">DARPA Craft</h1>
+        <h3 class="hero-tagline">Circuit Realization at Faster Timescales</h3>
 
-        <div id="canvas-container">
-          <canvas id="demo-canvas"></canvas>
-        </div>
+        ##<div id="canvas-container">
+         ## <canvas id="demo-canvas"></canvas>
+        ##</div>
 
-        <div id="logo" class="off">
-          <div class="circle" id="circle-1"><span></span></div>
-          <div class="circle" id="circle-2"><span></span></div>
-          <div class="circle" id="circle-3"><span></span></div>
-          <div class="circle" id="circle-4"><span></span></div>
-          <div class="circle" id="circle-5"><span></span></div>
-          <div class="circle" id="circle-6"><span></span></div>
-          <div class="circle" id="circle-7"><span></span></div>
-          <div class="circle" id="circle-8"><span></span></div>
-        </div>
+        ##<div id="logo" class="off">
+         ## <div class="circle" id="circle-1"><span></span></div>
+          ##<div class="circle" id="circle-2"><span></span></div>
+          ##<div class="circle" id="circle-3"><span></span></div>
+          ##<div class="circle" id="circle-4"><span></span></div>
+          ##<div class="circle" id="circle-5"><span></span></div>
+          ##<div class="circle" id="circle-6"><span></span></div>
+          ##<div class="circle" id="circle-7"><span></span></div>
+          ##<div class="circle" id="circle-8"><span></span></div>
+        ##</div>
 
         <div id="hero-signup" class="container">
           <div class="row">
-            <div class="col-sm-6 hidden-xs">
-              <a class="youtube" href="//www.youtube.com/watch?v=2TV21gOzfhw" aria-label="OSF YouTube Video"><i class="icon icon-play"></i></a>
+<!--            <div class="col-sm-6 hidden-xs">
+              <a class="youtube" href="//www.youtube.com/watch?v=2TV21gOzfhw" aria-label="OSF YouTube Video"><i class="icon icon-play"></i></a> 
               <img src="/static/img/front-page/screenshot.png" class="img-responsive" id="screenshot" alt="Screenshot of OSF" />
-            </div>
-            <div class="col-sm-6 sign-up-div">
-              <h2>Free and open source. Start now.</h2>
+            </div> -->
+            <div class="col-sm-6 sign-up-div" style="float:none;margin:auto;">
+              <h2>Create Account.</h2>
 
              <div id="signUp" class="anchor"></div>
                 <div id="signUpScope">
@@ -94,18 +94,13 @@
                           <div class="help-block osf-box-lt" >
                               <p data-bind="html: message, attr: {class: messageClass}" class=""></p>
                           </div>
-                          <!-- ko ifnot: submitted -->
-                          <div>
-                              <small> By clicking "Sign up free", you agree to our <a style="color:#5BC0DE" href="https://github.com/CenterForOpenScience/centerforopenscience.org/blob/master/TERMS_OF_USE.md">Terms</a> and that you have read our <a style="color:#5BC0DE" href="https://github.com/CenterForOpenScience/centerforopenscience.org/blob/master/PRIVACY_POLICY.md">Privacy Policy</a>, including our information on <a style="color:#5BC0DE" href="https://github.com/CenterForOpenScience/centerforopenscience.org/blob/master/PRIVACY_POLICY.md#f-cookies">Cookie Use</a>.</small>
-                          </div>
-                          <!-- /ko -->
                           %if recaptcha_site_key:
                               <div data-bind="fadeVisible: (fullName.isValid() || email1.isValid() || email2.isValid() || password.isValid()) && !submitted()" class="col-md-12 m-t-sm" style="z-index: 9;">
                                   <div class="g-recaptcha" style="display: inline-block; margin: 0 auto;" data-sitekey="${recaptcha_site_key}"></div>
                               </div>
                           %endif
                           <div>
-                              <button type="submit" class="btn btn-warning m-t-sm" data-bind="visible: !submitted()" id="signupSubmit">Sign up free</button>
+                              <button type="submit" class="btn btn-warning m-t-sm" data-bind="visible: !submitted()" id="signupSubmit">Sign up</button>
                           </div>
                   </form>
 
@@ -118,7 +113,7 @@
       </div>
     </div>
 
-    <div class="container grey-pullout space-top space-bottom">
+    <%doc><div class="container grey-pullout space-top space-bottom">
 
       <div class="row space-bottom">
         <div class="col-xs-12 text-center">
@@ -153,7 +148,7 @@
             </div>
             <div class="col-xs-9 col-xs-offset-1">
               <h3>Respect for your workflow</h3>
-              <p><strong>Connect your favorite third party services</strong> directly to the Open Science Framework.  <span class="label label-primary">3rd Party Integrations</span></p>
+              <p><strong>Connect your favorite third party services</strong> directly to the DARPA Craft Repository.  <span class="label label-primary">3rd Party Integrations</span></p>
             </div>
           </div>
         </div>
@@ -257,7 +252,7 @@
             <div class="col-md-4 col-md-offset-1">
               <i class="icon icon-earth"></i>
               <h2><strong>Contribute</strong> to global scientific efforts</h2>
-              <p>Labs and teams across the globe use the Open Science Framework to open their projects up to the scientific community. You can browse the newest and most popular public projects <a href="/explore/activity/">right here</a>. <span class="label label-warning">Get involved</span></p>
+              <p>Labs and teams across the globe use the DARPA Craft Repository to open their projects up to the scientific community. You can browse the newest and most popular public projects <a href="/explore/activity/">right here</a>. <span class="label label-warning">Get involved</span></p>
             </div>
             <div class="col-md-4 col-md-offset-1">
               <i class="icon icon-nonprofit"></i>
@@ -274,7 +269,7 @@
 
         <div class="row">
           <div class="col-md-12 text-center">
-            <h2><strong>Teachers, researchers, and global teams rely</strong> on the Open Science Framework</h2>
+            <h2><strong>Teachers, researchers, and global teams rely</strong> on the DARPA Craft Repository</h2>
           </div>
         </div>
 
@@ -334,7 +329,7 @@
         </div>
       </div>
 
-    </div>
+    </div></%doc>
 
 
 </%def>

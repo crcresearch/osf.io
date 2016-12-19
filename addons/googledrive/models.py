@@ -168,7 +168,17 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
         )  # Performs a save on self.user_settings
         self.save()
 
-        self.nodelogger.log('folder_selected', save=True)
+        #self.nodelogger.log('folder_selected', save=True)
+        self.owner.add_log(
+            action='googledrive_folder_selected',
+            params={
+                'project': self.owner.parent_id,
+                'node': self.owner._id,
+                'folder': self.folder_name,
+            },
+            auth=Auth(self.user_settings.owner),
+        )
+        self.save()
 
     @property
     def selected_folder_name(self):
@@ -183,8 +193,18 @@ class NodeSettings(BaseOAuthNodeSettings, BaseStorageAddon):
         """Remove user authorization from this node and log the event."""
 
         if add_log:
-            extra = {'folder_id': self.folder_id}
-            self.nodelogger.log(action='node_deauthorized', extra=extra, save=True)
+            #extra = {'folder_id': self.folder_id}
+            #self.nodelogger.log(action='node_deauthorized', extra=extra, save=True)
+            self.owner.add_log(
+                action='googledrive_node_deauthorized',
+                params={
+                    'project': self.owner.parent_id,
+                    'node': self.owner._id,
+                    'folder': self.folder_id,
+                },
+                auth=auth,
+            )
+            self.save()
 
         self.clear_settings()
         self.clear_auth()
