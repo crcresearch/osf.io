@@ -54,9 +54,9 @@
               <li>
                   <a href="/profile/"><i class="fa fa-user fa-lg p-r-xs"></i> My Profile</a>
               </li>
-              <li>
+             <!-- <li>
                   <a href="/support/" ><i class="fa fa-life-ring fa-lg p-r-xs"></i> Support</a>
-              </li>
+              </li> -->
 
               <li>
                   <a href="${web_url_for('user_profile')}"><i class="fa fa-cog fa-lg p-r-xs"></i> Settings</a>
