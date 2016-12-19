@@ -22,6 +22,6 @@
 <li><a href="https://docs.google.com/spreadsheet/ccc?key=0AvIo2znxWnxZdERIS2xqNnNxUUZRRTB5LVJxckhiY3c#gid=8">Project Progress and Results Spreadsheet</a>: The primary vehicle for reviewing eligible articles, reporting project progress and results, and documenting researcher contribution
 <li><a href="http://groups.google.com/group/openscienceframework?hl=en">Google Discussion Group</a>: to participate in the dynamic discussion of project design and progress (and discussions about other OSF projects)
 <li>Project Materials Dropbox: Access scientific articles that are eligible for replication, or other background reading materials (email nosek at virginia dot edu to get access)
-<li>Open Science Framework: Replication study materials will be made available in the OSF.
+<li>DARPA Craft Repository: Replication study materials will be made available in the OSF.
 </ol>
 </%def>

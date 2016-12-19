@@ -2701,7 +2701,7 @@ class Node(GuidStoredObject, AddonModelMixin, IdentifierMixin, Commentable, Spam
                 contributor.csl_name  # method in auth/model.py which parses the names of authors
                 for contributor in self.visible_contributors
             ],
-            'publisher': 'Open Science Framework',
+            'publisher': 'DARPA Craft Repository',
             'type': 'webpage',
             'URL': self.display_absolute_url,
         }

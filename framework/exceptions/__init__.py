@@ -12,9 +12,9 @@ class HTTPError(FrameworkError):
 
     error_msgs = {
         http.BAD_REQUEST: {
-            'message_short': 'Bad request',
-            'message_long': ('If this should not have occurred and the issue persists, '
-            'please report it to <a href="mailto:support@osf.io">support@osf.io</a>.'),
+            'message_short': 'Bad request'
+            #'message_long': ('If this should not have occurred and the issue persists, '
+            #'please report it to <a href="mailto:support@osf.io">support@osf.io</a>.'),
         },
         http.UNAUTHORIZED: {
             'message_short': 'Unauthorized',
@@ -22,27 +22,30 @@ class HTTPError(FrameworkError):
         },
         http.FORBIDDEN: {
             'message_short': 'Forbidden',
-            'message_long': ('You do not have permission to perform this action. '
-                'If this should not have occurred and the issue persists, '
-                'please report it to <a href="mailto:support@osf.io">support@osf.io</a>.'),
+            'message_long': ('You do not have permission to perform this action. ')
+                #'If this should not have occurred and the issue persists, '
+                #'please report it to <a href="mailto:support@osf.io">support@osf.io</a>.'),
         },
         http.NOT_FOUND: {
             'message_short': 'Page not found',
-            'message_long': ('The requested resource could not be found. If this '
-                'should not have occurred and the issue persists, please report it '
-                'to <a href="mailto:support@osf.io">support@osf.io</a>.'),
+            'message_long': ('The requested resource could not be found. ')
+            #'message_long': ('The requested resource could not be found. If this '
+                #'should not have occurred and the issue persists, please report it '
+                #'to <a href="mailto:support@osf.io">support@osf.io</a>.'),
         },
         http.GONE: {
             'message_short': 'Resource deleted',
-            'message_long': ('User has deleted this content. If this should '
-                'not have occurred and the issue persists, please report it to '
-                '<a href="mailto:support@osf.io">support@osf.io</a>.'),
+            'message_long': ('User has deleted this content. ')
+            #'message_long': ('User has deleted this content. If this should '
+            #    'not have occurred and the issue persists, please report it to '
+            #    '<a href="mailto:support@osf.io">support@osf.io</a>.'),
         },
         http.SERVICE_UNAVAILABLE: {
             'message_short': 'Service is currently unavailable',
-            'message_long': ('The requested service is unavailable. If this should '
-                'not have occurred and the issue persists, please report it to '
-                '<a href="mailto:support@osf.io">support@osf.io</a>.'),
+            'message_long': ('The requested service is unavailable.')
+            #'message_long': ('The requested service is unavailable. If this should '
+            #    'not have occurred and the issue persists, please report it to '
+            #    '<a href="mailto:support@osf.io">support@osf.io</a>.'),
         },
         451: {
             'message_short': 'Content removed',

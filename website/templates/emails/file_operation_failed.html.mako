@@ -19,10 +19,10 @@
                             <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
                                 <tr>
                                     <td style="border-collapse: collapse;">
-                                        <img src="https://osf.io/static/img/cos-white2.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+                                        <img src="https://osf.io/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
                                     </td>
                                     <td style="border-collapse: collapse;">
-                                        <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">Open Science Framework</h2>
+                                        <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
                                     </td>
                                 </tr>
                             </table>
@@ -55,7 +55,7 @@
                 <tbody>
                     <tr>
                         <td style="border-collapse: collapse;">
-                          An error has occurred, and the ${'folder' if source_path.endswith('/') else 'file'} from ${source_node.title} on The Open Science Framework was not successfully ${'moved' if action == 'move' else 'copied'}.
+                          An error has occurred, and the ${'folder' if source_path.endswith('/') else 'file'} from ${source_node.title} on The DARPA Craft Repository was not successfully ${'moved' if action == 'move' else 'copied'}.
                           Please log in and try this action again. If the problem persists, please email support@osf.io.
                         </td>
                     </tr>

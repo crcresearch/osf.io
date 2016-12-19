@@ -4,7 +4,7 @@
 
 Hello ${fullname},
 
-You have been added by ${referrer.fullname} as a contributor to the preprint "${node.title}" on the Open Science Framework. To set a password for your account, visit:
+You have been added by ${referrer.fullname} as a contributor to the preprint "${node.title}" on the DARPA Craft Repository. To set a password for your account, visit:
 
 ${claim_url}
 
@@ -19,9 +19,9 @@ If you are not ${fullname} or you are erroneously being associated with "${node.
 
 Sincerely,
 
-Open Science Framework Robot
+DARPA Craft Repository Robot
 
 
-Want more information? Visit https://osf.io/ to learn about the Open Science Framework, or https://cos.io/ for information about its supporting organization, the Center for Open Science.
+Want more information? Visit https://osf.io/ to learn about the DARPA Craft Repository, or https://cos.io/ for information about its supporting organization, the Center for Open Science.
 
 Questions? Email contact@osf.io

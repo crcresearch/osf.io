@@ -1,6 +1,6 @@
 Dear ${user.fullname},
 
-You are receiving this message because you have an Open Science Framework (OSF) account.  We are writing to let you know of a change to our registrations that may affect how you choose to use that feature.
+You are receiving this message because you have an DARPA Craft Repository (OSF) account.  We are writing to let you know of a change to our registrations that may affect how you choose to use that feature.
 
 Registrations create a frozen, time-stamped snapshot of the project and its contents.  Registrations are used for archiving significant events in the research lifecycle, such as pre-registering an analysis plan prior to data collection, and they cannot be deleted.  As early as June 8, 2015, upon creating a registration, you will choose to make it public immediately or set an embargo period, which will keep the project contents private for up to one year, other than the title, description, creation date, embargo period, and contributors.  Users will be able to end the embargo early, but they will not be able to stop the registration from becoming public after the embargo.  Instead, to remove a public registration, users will have to retract it - similar to retraction of a published article.  The same information that is available during the embargo would remain, but all other project content would be inaccessible and replaced with a retraction notice.
 

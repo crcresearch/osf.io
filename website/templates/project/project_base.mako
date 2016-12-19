@@ -5,7 +5,7 @@
     %if node['description']:
         ${sanitize.strip_html(node['description']) + ' | '}
     %endif
-    Hosted on the Open Science Framework
+    Hosted on the DARPA Craft Repository
 
 
 </%def>

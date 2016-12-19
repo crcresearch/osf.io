@@ -1,6 +1,6 @@
 Hello ${user.fullname},
 
-This email address has been added to an account on the Open Science Framework.
+This email address has been added to an account on the DARPA Craft Repository.
 
 Please verify your email address by visiting this link:
 

@@ -1,6 +1,6 @@
 Dear ${user.given_name},
 
-You are receiving this message because you have an account on the Open Science Framework (OSF). We are writing to let you know of a change to our permission model that may affect how you choose to organize your projects.
+You are receiving this message because you have an account on the DARPA Craft Repository (OSF). We are writing to let you know of a change to our permission model that may affect how you choose to organize your projects.
 
 Contributors on OSF projects have one of three permission statuses: administrator, read+write, and read-only. These affect what actions those contributors can perform on the project. Projects can have sub-components that have contributor lists that are distinct from the project contributor list.
 

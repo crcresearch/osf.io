@@ -151,7 +151,8 @@ notemplate = OsfWebRenderer('', renderer=render_mako_string, trust=False)
 
 def favicon():
     return send_from_directory(
-        settings.STATIC_FOLDER,
+        '/static/',
+        #settings.STATIC_FOLDER,
         'favicon.ico',
         mimetype='image/vnd.microsoft.icon'
     )

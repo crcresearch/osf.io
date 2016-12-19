@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 from website import settings
 
 if not settings.DEBUG_MODE:
-    from gevent import monkey
-    monkey.patch_all()
+    #from gevent import monkey
+    #monkey.patch_all()
     # PATCH: avoid deadlock on getaddrinfo, this patch is necessary while waiting for
     # the final gevent 1.1 release (https://github.com/gevent/gevent/issues/349)
     unicode('foo').encode('idna')  # noqa

@@ -42,7 +42,7 @@ ACTIVE_META_SCHEMAS = (
     'Prereg Challenge',
     'Open-Ended Registration',
     'AsPredicted Preregistration',
-    'OSF-Standard Pre-Data Collection Registration',
+    'Standard Pre-Data Collection Registration',
     'Replication Recipe (Brandt et al., 2013): Pre-Registration',
     'Replication Recipe (Brandt et al., 2013): Post-Completion',
     "Pre-Registration in Social Psychology (van 't Veer & Giner-Sorolla, 2016): Pre-Registration",

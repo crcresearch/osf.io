@@ -18,8 +18,8 @@
           </a>
       </span>
       <!-- /ko -->
-      <a class="navbar-brand hidden-sm hidden-xs" href="/"><img src="/static/img/cos-white2.png" class="osf-navbar-logo" width="27" alt="COS logo"/> Open Science Framework</a>
-      <a class="navbar-brand visible-sm visible-xs" href="/"><img src="/static/img/cos-white2.png" class="osf-navbar-logo" width="27" alt="COS logo"/> OSF</a>
+      <a class="navbar-brand hidden-sm hidden-xs" href="/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
+      <a class="navbar-brand visible-sm visible-xs" href="/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse navbar-right">
       <ul class="nav navbar-nav">
@@ -37,9 +37,9 @@
           </ul>
         </li>
         % if not user_name:
-        <li class="dropdown">
+        <!--<li class="dropdown">
           <a href="${domain}support/" >Support</a>
-        </li>
+        </li>-->
         % endif
 
         <!-- ko ifnot: onSearchPage -->

@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>OSF | ${self.title()}</title>
+    <title>Craft | ${self.title()}</title>
     % if settings.GOOGLE_SITE_VERIFICATION:
         <meta name="google-site-verification" content="${settings.GOOGLE_SITE_VERIFICATION}" />
     % endif
@@ -35,7 +35,7 @@
     % endif
 
     <!-- Facebook display -->
-    <meta name="og:image" content="https://cos.io/static/img/cos_center_logo_small.png"/>
+    <!-- <meta name="og:image" content="/static/favicon.ico"/> -->
     <meta name="og:title" content="${self.title()}"/>
     <meta name="og:ttl" content="3"/>
     <meta name="og:description" content="${self.og_description()}"/>
@@ -104,7 +104,7 @@
             <div class='col-sm-10 col-xs-12'>
                 <a data-bind="click: dismiss" class="close" href="#">&times;</a>
                 <h1>Start managing your projects on the OSF today.</h1>
-                <p>Free and easy to use, the Open Science Framework supports the entire research lifecycle: planning, execution, reporting, archiving, and discovery.</p>
+                <p>Free and easy to use, the DARPA Craft Repository supports the entire research lifecycle: planning, execution, reporting, archiving, and discovery.</p>
                 <div>
                     <a data-bind="click: trackClick.bind($data, 'Create Account')" class="btn btn-primary" href="${web_url_for('index')}#signUp">Create an Account</a>
 
@@ -233,7 +233,7 @@
 </%def>
 
 <%def name="og_description()">
-    Hosted on the Open Science Framework
+    Hosted on the DARPA Craft Repository
 </%def>
 
 <%def name="stylesheets()">

@@ -359,14 +359,14 @@ var MyProjects = {
         self.systemCollections = options.systemCollections || [
             new LinkObject('collection', { nodeType : 'projects'}, 'All my projects'),
             new LinkObject('collection', { nodeType : 'registrations'}, 'All my registrations'),
-            new LinkObject('collection', { nodeType : 'preprints', link: $osf.apiV2Url('users/me/nodes/', { query : { 'filter[preprint]': true, 'related_counts' : 'children', 'embed' : 'contributors'}})}, 'All my preprints')
+            //new LinkObject('collection', { nodeType : 'preprints', link: $osf.apiV2Url('users/me/nodes/', { query : { 'filter[preprint]': true, 'related_counts' : 'children', 'embed' : 'contributors'}})}, 'All my preprints')
         ];
 
         self.fetchers = {};
         if (!options.systemCollections) {
           self.fetchers[self.systemCollections[0].id] = new NodeFetcher('nodes');
           self.fetchers[self.systemCollections[1].id] = new NodeFetcher('registrations');
-          self.fetchers[self.systemCollections[2].id] = new NodeFetcher('preprints', self.systemCollections[2].data.link);
+          //self.fetchers[self.systemCollections[2].id] = new NodeFetcher('preprints', self.systemCollections[2].data.link);
         } else {
             // TODO: This assumes that there are two systemcolelctiosn passes and what they are. It should ideally loop through passed collections.
           self.fetchers[self.systemCollections[0].id] = new NodeFetcher('nodes', self.systemCollections[0].data.link);
@@ -638,18 +638,21 @@ var MyProjects = {
                             'You have not created any projects yet.');
                     } else if (lastcrumb.data.nodeType === 'registrations'){
                         if (self.institutionId) {
-                            template = m('.db-non-load-template.m-md.p-md.osf-box',
-                                'There have been no completed registrations for this institution, but you can view the ',
-                                m('a', {href: 'https://osf.io/explore/activity/#newPublicRegistrations'}, 'newest public registrations'),
-                                ' or ',
-                                m('a', {href: 'https://osf.io/explore/activity/#popularPublicRegistrations'}, 'popular public registrations.'));
+                            //template = m('.db-non-load-template.m-md.p-md.osf-box',
+                            //    'There have been no completed registrations for this institution, but you can view the ',
+                            //    m('a', {href: 'https://osf.io/explore/activity/#newPublicRegistrations'}, 'newest public registrations'),
+                            //    ' or ',
+                            //    m('a', {href: 'https://osf.io/explore/activity/#popularPublicRegistrations'}, 'popular public registrations.'));
+                            template = m('.db-non-load-template.m-md.p-md.osf-box', 
+                                'There have been no completed registrations for this institution.');
                         } else {
                             template = m('.db-non-load-template.m-md.p-md.osf-box',
                             'You have not made any registrations yet. Go to ',
                             m('a', {href: 'http://help.osf.io/m/registrations'}, 'Getting Started'), ' to learn how registrations work.' );
                         }
                     } else if (lastcrumb.data.nodeType === 'preprints'){
-                        template = m('.db-non-load-template.m-md.p-md.osf-box', [m('span', 'You have not made any preprints yet. Learn more about preprints in the '), m('a[href="http://help.osf.io/m/preprints"]', 'OSF Guides'), m('span', ' or '), m('a[href="/preprints/"]', 'make one now.')]);
+                        //template = m('.db-non-load-template.m-md.p-md.osf-box', [m('span', 'You have not made any preprints yet. Learn more about preprints in the '), m('a[href="http://help.osf.io/m/preprints"]', 'OSF Guides'), m('span', ' or '), m('a[href="/preprints/"]', 'make one now.')]);
+                        template = m('.db-non-load-template.m-md.p-md.osf-box', [m('span', 'You have not made any preprints yet.'),  m('a[href="/preprints/"]', ' Make one now.')]);
                     } else if (lodashGet(lastcrumb, 'data.node.attributes.bookmarks')) {
                         template = m('.db-non-load-template.m-md.p-md.osf-box', 'You have no bookmarks. You can add projects or registrations by dragging them into your bookmarks or by clicking the Add to Bookmark button on the project or registration.');
                     } else {

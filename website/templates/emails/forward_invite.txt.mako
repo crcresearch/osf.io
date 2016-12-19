@@ -14,7 +14,7 @@ After ${fullname} confirms their account, they will be able to contribute to the
 
 Hello ${fullname},
 
-You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the Open Science Framework. To set a password for your account, visit:
+You have been added by ${referrer.fullname} as a contributor to the project "${node.title}" on the DARPA Craft Repository. To set a password for your account, visit:
 
 ${claim_url}
 
@@ -25,4 +25,4 @@ Sincerely,
 The OSF Team
 
 
-Want more information? Visit https://osf.io/ or https://cos.io/ for information about the Open Science Framework and its supporting organization, the Center for Open Science. Questions? Email contact@osf.io.
+Want more information? Visit https://osf.io/ or https://cos.io/ for information about the DARPA Craft Repository and its supporting organization, the Center for Open Science. Questions? Email contact@osf.io.

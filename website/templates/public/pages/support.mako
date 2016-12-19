@@ -26,7 +26,7 @@
                     </div>
                     <div class="support-col-body clearfix">
                         <p> How can it be free? How will the OSF be useful to my research? What is a registration?
-                        Get your questions about the Open Science Framework answered on our <a href="/faq"> FAQ page. </a></p>
+                        Get your questions about the DARPA Craft Repository answered on our <a href="/faq"> FAQ page. </a></p>
                         <a href="/faq" class="btn btn-info m-t-lg pull-right" > Visit FAQ <i class="fa fa-angle-right"></i></a>
                     </div>
 

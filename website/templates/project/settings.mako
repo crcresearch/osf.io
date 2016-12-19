@@ -234,7 +234,7 @@
                                 %if  node['is_public']:
                                     <p class="text">Control who can edit the wiki of <b>${node['title']}</b></p>
                                 %else:
-                                    <p class="text">Control who can edit your wiki. To allow all OSF users to edit the wiki, <b>${node['title']}</b> must be public.</p>
+                                    <p class="text">Control who can edit your wiki. To allow all Craft users to edit the wiki, <b>${node['title']}</b> must be public.</p>
                                 %endif
                             </div>
 
@@ -250,7 +250,7 @@
                                 </div>
                             </form>
                         % else:
-                            <p class="text">To allow all OSF users to edit the wiki, <b>${node['title']}</b> must be public and the wiki enabled.</p>
+                            <p class="text">To allow all Craft users to edit the wiki, <b>${node['title']}</b> must be public and the wiki enabled.</p>
                         %endif
                     </div>
                 </div>
@@ -280,7 +280,7 @@
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="commentLevel" value="public" ${'checked' if comments['level'] == 'public' else ''}>
-                                    When the ${node['node_type']} is public, any OSF user can post comments
+                                    When the ${node['node_type']} is public, any Craft user can post comments
                                 </label>
                             </div>
 
