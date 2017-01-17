@@ -11,8 +11,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-        <a class="navbar-brand hidden-sm hidden-xs" href="/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
-        <a class="navbar-brand visible-sm visible-xs" href="/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
+        <a class="navbar-brand hidden-sm hidden-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
+        <a class="navbar-brand visible-sm visible-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
         <div class="service-name">
             <a href="${service_url}">
                 <span class="hidden-xs"> REPOSITORY </span>
