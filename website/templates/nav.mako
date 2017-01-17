@@ -18,8 +18,8 @@
           </a>
       </span>
       <!-- /ko -->
-      <a class="navbar-brand hidden-sm hidden-xs" href="/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
-      <a class="navbar-brand visible-sm visible-xs" href="/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
+      <a class="navbar-brand hidden-sm hidden-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
+      <a class="navbar-brand visible-sm visible-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse navbar-right">
       <ul class="nav navbar-nav">
