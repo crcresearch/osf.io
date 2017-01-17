@@ -30,11 +30,21 @@
 
                     % endif
                         <li>
-                            <a href="${node['url']}"  class="project-title">
+                            <a href="https://dev.craftproject.org/projects/${ node['id'] }"  class="project-title"> 
                                 ${ node['title'] }
                             </a>
                         </li>
                     % if not node['is_retracted']:
+                        <li id="projectNavAdmin">
+                            <a href="${node['url']}">
+                               	Admin 
+                            </a>
+                        </li>
+                        <li id="projectNavAdmin">
+                            <a href="https://craftproject.org/flow/${ node['id'] }">
+                               	Craft 
+                            </a>
+                        </li>
                         <li id="projectNavFiles">
                             <a href="${node['url']}files/">
                                 Files
@@ -55,7 +65,7 @@
                                 </li>
                             % endif
                         % endfor
-
+<!--
                         % if node['is_public'] or user['is_contributor']:
                             <li><a href="${node['url']}analytics/">Analytics</a></li>
                         % endif
@@ -64,6 +74,13 @@
                             <li><a href="${node['url']}registrations/">Registrations</a></li>
                         % endif
 
+<<<<<<< HEAD
+=======
+                        % if not node['anonymous']:
+                            <li><a href="${node['url']}forks/">Forks</a></li>
+                        %endif
+-->                        
+>>>>>>> make the nav bars appear like app navbars
                         % if user['is_contributor']:
                             <li><a href="${node['url']}contributors/">Contributors</a></li>
                         % endif

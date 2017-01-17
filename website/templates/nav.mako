@@ -37,6 +37,9 @@
 
     <div class="navbar-collapse collapse navbar-right" id="secondary-navigation">
         <ul class="nav navbar-nav">
+            <li>
+                <a href="https://dev.craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
+            </li>
             % if service_name == 'HOME':
                 % if user_name:
                     <li><a data-bind="click: trackClick.bind($data, 'MyProjects')" href="${domain}myprojects/">My Projects</a></li>
