@@ -4,6 +4,8 @@ import os
 import uuid
 import markupsafe
 
+#import logging
+#logger = logging.getLogger(__name__)
 
 from flask import make_response
 from flask import redirect
@@ -231,6 +233,7 @@ def get_auth(auth, **kwargs):
     if not auth.user:
         # Central Authentication Server OAuth Bearer Token
         authorization = request.headers.get('Authorization')
+	#logger.error("authorization:{}".format(request.headers))
         if authorization and authorization.startswith('Bearer '):
             client = cas.get_client()
             try:

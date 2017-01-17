@@ -205,7 +205,6 @@ class DropboxNodeSettings(StorageAddonBase, AddonOAuthNodeSettingsBase):
     def set_folder(self, folder, auth):
         self.folder = folder
         # Add log to node
-        #self.nodelogger.log(action='folder_selected', save=True)
         self.owner.add_log(
             action='dropbox_folder_selected',
             params={
@@ -219,12 +218,9 @@ class DropboxNodeSettings(StorageAddonBase, AddonOAuthNodeSettingsBase):
 
     def deauthorize(self, auth=None, add_log=True):
         """Remove user authorization from this node and log the event."""
-        #folder = self.folder
         self.clear_settings()
 
         if add_log:
-            #extra = {'folder': folder}
-            #self.nodelogger.log(action='node_deauthorized', extra=extra, save=True)
             self.owner.add_log(
                 action='dropbox_node_deauthorized',
                 params={

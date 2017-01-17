@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Center for Open Science Notifications">
+    <meta name="description" content="DARPA Craft Repository Notifications">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="-webkit-text-size-adjust: none;font-family: 'Helvetica', sans-serif;background: #eeeeee;padding: 0;margin: 0;border: none;list-style: none;width: 100% !important;">
@@ -21,7 +21,7 @@
                                 <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
                                     <tr>
                                         <td style="border-collapse: collapse;">
-                                            <img src="https://osf.io/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+                                            <img src="https://osf.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
                                         </td>
                                         <td style="border-collapse: collapse;">
                                             <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
@@ -60,7 +60,7 @@
                     <tbody>
                         <tr>
                             <td style="border-collapse: collapse;">
-                                <p class="text-smaller text-center" style="text-align: center;font-size: 12px;">Copyright &copy; 2016 Center For Open Science, All rights reserved.
+                                <p class="text-smaller text-center" style="text-align: center;font-size: 12px;">DARPA Craft Repository
                                 ${self.footer()}
                                 </p>
                             </td>

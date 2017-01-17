@@ -171,7 +171,6 @@ class BoxNodeSettings(StorageAddonBase, AddonOAuthNodeSettingsBase):
     def set_folder(self, folder_id, auth):
         self.folder_id = str(folder_id)
         self.folder_name, self.folder_path = self._folder_data(folder_id)
-        #self.nodelogger.log(action='folder_selected', save=True)
         self.owner.add_log(
             action='box_folder_selected',
             params={
@@ -214,11 +213,7 @@ class BoxNodeSettings(StorageAddonBase, AddonOAuthNodeSettingsBase):
         folder_id = self.folder_id
         self.clear_settings()
 
-        #logger.debug(self.display_name)
-
         if add_log:
-            #extra = {'folder_id': folder_id}
-            #self.nodelogger.log(action='node_deauthorized', extra=extra, save=True)
             self.owner.add_log(
                 action='box_node_deauthorized',
                 params={

@@ -238,8 +238,10 @@
     <link href="${urls['mfr']}/static/css/mfr.css" media="all" rel="stylesheet" />
     <script src="${urls['mfr']}/static/js/mfr.js"></script>
 
-    <script src="//${urls['sharejs']}/text.js"></script>
-    <script src="//${urls['sharejs']}/share.js"></script>
+    ##<script src="//${urls['sharejs']}/text.js"></script>
+    ##<script src="//${urls['sharejs']}/share.js"></script>
+    <script src="https://osf.craftproject.org/sharejs/text.js"></script>
+    <script src="https://osf.craftproject.org/sharejs/share.js"></script>
 
     <script src=${"/static/public/js/file-page.js" | webpack_asset}></script>
     <script src=${"/static/public/js/view-file-tree-page.js" | webpack_asset}></script>
