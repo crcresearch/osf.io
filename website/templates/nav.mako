@@ -24,16 +24,16 @@
     <div id="navbar" class="navbar-collapse collapse navbar-right">
       <ul class="nav navbar-nav">
         % if user_name:
-            <li id="osfNavDashboard"><a href="/dashboard">Dashboard</a></li>
-            <li id="osfNavMyProjects"><a href="/myprojects/">My Projects</a></li>
+<!--            <li id="osfNavDashboard"><a href="/dashboard">Dashboard</a></li>-->
+<!--            <li id="osfNavMyProjects"><a href="/myprojects/">My Projects</a></li>-->
         % endif
-        <li class="dropdown">
+<!--        <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Browse <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
               <li><a href="${domain}explore/activity/">New Projects</a></li>
               <li><a href="${domain}search/?q=*&amp;filter=registration">Registry</a></li>
           </ul>
-        </li>
+        </li>-->
         % if not user_name:
         <!--<li class="dropdown">
           <a href="${domain}support/" >Support</a>
@@ -41,25 +41,32 @@
         % endif
 
         <!-- ko ifnot: onSearchPage -->
-        <li class="hidden-xs" data-bind="click : toggleSearch, css: searchCSS">
+        <!--<li class="hidden-xs" data-bind="click : toggleSearch, css: searchCSS">
             <a class="" >
                 <span rel="tooltip" data-placement="bottom" title="Search OSF" class="fa fa-search fa-lg" ></span>
             </a>
-        </li>
+        </li>-->
         <!-- /ko -->
         % if user_name and display_name:
         <li class="dropdown">
           <a href="#" class="dropdown-toggle nav-user-dropdown" data-toggle="dropdown" role="button" aria-expanded="false"><span class="osf-gravatar"><img src="${user_gravatar}" alt="User gravatar"/> </span> ${display_name} <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
               <li>
+                  <a href="https://craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
+              </li>
+              <li>
+                  <a href="/myprojects/"><i class="fa fa-th-large fa-lg p-r-xs"></i>    My Projects</a>
+              </li>
+              <li>
                   <a href="/profile/"><i class="fa fa-user fa-lg p-r-xs"></i> My Profile</a>
               </li>
-             <!-- <li>
+             <!-- 
+              <li>
                   <a href="/support/" ><i class="fa fa-life-ring fa-lg p-r-xs"></i> Support</a>
               </li> -->
 
               <li>
-                  <a href="${web_url_for('user_profile')}"><i class="fa fa-cog fa-lg p-r-xs"></i> Settings</a>
+                  <a href="${web_url_for('user_profile')}"><i class="fa fa-gears fa-lg p-r-xs"></i> Settings</a>
               </li>
               <li>
                   <a href="${web_url_for('auth_logout')}"><i class="fa fa-sign-out fa-lg p-r-xs"></i> Log out</a>
