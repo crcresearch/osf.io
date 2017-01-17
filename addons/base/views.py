@@ -231,6 +231,7 @@ def get_auth(auth, **kwargs):
     if not auth.user:
         # Central Authentication Server OAuth Bearer Token
         authorization = request.headers.get('Authorization')
+	#logger.error("authorization:{}".format(request.headers))
         if authorization and authorization.startswith('Bearer '):
             client = cas.get_client()
             try:

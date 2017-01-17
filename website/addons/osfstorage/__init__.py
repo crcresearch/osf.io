@@ -33,8 +33,10 @@ INCLUDE_JS = {
 HAS_HGRID_FILES = True
 GET_HGRID_DATA = views.osf_storage_root
 
-MAX_FILE_SIZE = 5 * 1024  # 5 GB
-HIGH_MAX_FILE_SIZE = 5 * 1024  # 5 GB
+#MAX_FILE_SIZE = 5 * 1024  # 5 GB
+#HIGH_MAX_FILE_SIZE = 5 * 1024  # 5 GB
+MAX_FILE_SIZE = 15 * 1024  # 15 GB
+HIGH_MAX_FILE_SIZE = 15 * 1024  # 15 GB
 
 # HERE = os.path.dirname(os.path.abspath(__file__))
 NODE_SETTINGS_TEMPLATE = None  # no node settings view

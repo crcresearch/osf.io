@@ -54,7 +54,6 @@ class BaseAddonSettings(ObjectIDMixin, BaseModel):
         try:
             return self._icon
         except:
-            #static_path = os.path.join('website', 'addons', self.short_name, 'static')
             static_path = os.path.join(settings.BASE_PATH, 'addons', self.short_name, 'static')
             static_files = glob.glob(os.path.join(static_path, 'comicon.*'))
             image_files = [
