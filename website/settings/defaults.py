@@ -93,7 +93,7 @@ OSF_SESSION_TIMEOUT = 30 * 24 * 60 * 60  # 30 days in seconds
 # TODO: Override SECRET_KEY in local.py in production
 SECRET_KEY = 'CHANGEME'
 SESSION_COOKIE_SECURE = SECURE_MODE
-SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = False #True
 
 # local path to private key and cert for local development using https, overwrite in local.py
 OSF_SERVER_KEY = None
@@ -551,11 +551,11 @@ else:
             'schedule': crontab(minute=0, hour=2),  # Daily 2:00 a.m.
             'kwargs': {}
         },
-    #     'analytics-upload': {
-    #         'task': 'scripts.analytics.upload',
-    #         'schedule': crontab(minute=0, hour=6),  # Daily 6:00 a.m.
-    #         'kwargs': {}
-    #     },
+        #'analytics-upload': {
+        #    'task': 'scripts.analytics.upload',
+        #    'schedule': crontab(minute=0, hour=6),  # Daily 6:00 a.m.
+        #    'kwargs': {}
+        #},
     })
 
 
