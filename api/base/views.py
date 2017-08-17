@@ -33,15 +33,6 @@ from website.models import Pointer
 CACHE = weakref.WeakKeyDictionary()
 
 
-class CustomAPIBaseView(generics.GenericAPIView):
-
-    def __init__(self, **kwargs):
-        assert getattr(self, 'view_name', None), 'Must specify view_name on view.'
-        assert getattr(self, 'view_category', None), 'Must specify view_category on view.'
-        self.view_fqn = ':'.join([self.view_category, self.view_name])
-        super(CustomAPIBaseView, self).__init__(**kwargs)
-
-
 class JSONAPIBaseView(generics.GenericAPIView):
 
     def __init__(self, **kwargs):

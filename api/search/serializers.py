@@ -8,6 +8,7 @@ from api.registrations.serializers import RegistrationSerializer
 from api.users.serializers import UserSerializer
 
 from framework.auth.core import User
+from rest_framework import serializers
 
 from website.files.models import FileNode
 from website.models import Node
@@ -44,3 +45,4 @@ class SearchSerializer(JSONAPISerializer):
 
     class Meta:
         type_ = 'search'
+
