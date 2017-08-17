@@ -44,7 +44,7 @@ class CustomSearchView(generics.ListAPIView):
         start = (page - 1) * page_size
         try:
             # results = search.search(build_query(query, start=start, size=page_size), doc_type=self.doc_type, raw=True)
-            results = search.search(build_query_object(query, start=start, size=page_size), doc_type=self.doc_type, raw=True)
+            results = search.search(build_query_object(q=query, start=start, size=page_size), doc_type=self.doc_type, raw=True)
         except MalformedQueryError as e:
             raise ValidationError(e.message)
         return results
