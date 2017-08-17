@@ -10,6 +10,8 @@ from api.institutions.serializers import InstitutionSerializer
 from osf.models import AbstractNode
 
 from osf.models import OSFUser
+from framework.auth.core import User
+from rest_framework import serializers
 
 from osf.models import BaseFileNode
 
@@ -51,3 +53,4 @@ class SearchSerializer(JSONAPISerializer):
 
     class Meta:
         type_ = 'search'
+

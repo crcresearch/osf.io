@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from rest_framework import generics, permissions as drf_permissions
 from rest_framework.exceptions import ValidationError
+from rest_framework.renderers import JSONRenderer
 
 from api.base import permissions as base_permissions
 from api.base.views import JSONAPIBaseView
@@ -19,38 +22,30 @@ from framework.auth.oauth_scopes import CoreScopes
 from osf.models import Institution, BaseFileNode, AbstractNode, OSFUser
 from website.search import search
 from website.search.exceptions import MalformedQueryError
-from website.search.util import build_query, build_query_object
+from website.search.util import build_query
+
+from django.http import HttpResponse
 
 
-class CustomSearchView(generics.ListAPIView):
+class SearchIPCores(generics.CreateAPIView):
     required_read_scopes = [CoreScopes.SEARCH]
-    required_write_scopes = [CoreScopes.NULL]
+    required_write_scopes = [CoreScopes.SEARCH]
+
+    data={}
 
     permission_classes = (
         drf_permissions.IsAuthenticatedOrReadOnly,
         base_permissions.TokenHasScope,
     )
 
-    pagination_class = SearchPagination
+    renderer_classes = (JSONRenderer, )
 
-    def __init__(self):
-        self.doc_type = getattr(self, 'doc_type', None)
+    def create(request, *args, **kwargs):
+        results = search.raw_search(query=request.data, doc_type='ipcore', index='website')
+        return HttpResponse(json.dumps(results), content_type="application/json")
 
-    def get_queryset(self):
-        # query = self.request.query_params.get('q', '*')
-        query = self.request.data
-        page = int(self.request.query_params.get('page', '1'))
-        page_size = min(int(self.request.query_params.get('page[size]', REST_FRAMEWORK['PAGE_SIZE'])), MAX_PAGE_SIZE)
-        start = (page - 1) * page_size
-        try:
-            # results = search.search(build_query(query, start=start, size=page_size), doc_type=self.doc_type, raw=True)
-            results = search.search(build_query_object(q=query, start=start, size=page_size), doc_type=self.doc_type, raw=True)
-        except MalformedQueryError as e:
-            raise ValidationError(e.message)
-        return results
 
 class BaseSearchView(JSONAPIBaseView, generics.ListAPIView):
-
     required_read_scopes = [CoreScopes.SEARCH]
     required_write_scopes = [CoreScopes.NULL]
 

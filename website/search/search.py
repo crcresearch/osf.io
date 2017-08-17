@@ -18,6 +18,10 @@ def requires_search(func):
             return func(*args, **kwargs)
     return wrapped
 
+@requires_search
+def raw_search(query, index=None, doc_type=None, raw=None):
+    index = index or settings.ELASTIC_INDEX
+    return search_engine.raw_search(query, index=index, doc_type=doc_type, raw=raw)
 
 @requires_search
 def search(query, index=None, doc_type=None, raw=None):
