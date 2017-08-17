@@ -168,7 +168,7 @@ def get_tags(query, index):
 
 
 @requires_search
-def raw_search(query, index=None, doc_type='_all', raw=True):
+def raw_search(query, index=None, doc_type='_all'):
     return es.search(index=index, doc_type=doc_type, body=query)
 
 @requires_search

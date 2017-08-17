@@ -42,7 +42,7 @@ class SearchIPCores(generics.CreateAPIView):
     renderer_classes = (JSONRenderer, )
 
     def create(request, *args, **kwargs):
-        results = search.raw_search(query=request.data, doc_type='ipcore', index='website')
+        results = search.raw_search(query=request.data, doc_type='ipcore')
         return HttpResponse(json.dumps(results), content_type="application/json")
 
 
