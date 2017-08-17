@@ -46,6 +46,7 @@ ALIASES = {
     'total': 'Total',
     'file': 'Files',
     'institution': 'Institutions',
+    'ipcore': 'IPCores',
 }
 
 DOC_TYPE_TO_MODEL = {
