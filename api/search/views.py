@@ -19,8 +19,35 @@ from framework.auth.oauth_scopes import CoreScopes
 from osf.models import Institution, BaseFileNode, AbstractNode, OSFUser
 from website.search import search
 from website.search.exceptions import MalformedQueryError
-from website.search.util import build_query
+from website.search.util import build_query, build_query_object
 
+
+class CustomSearchView(generics.ListAPIView):
+    required_read_scopes = [CoreScopes.SEARCH]
+    required_write_scopes = [CoreScopes.NULL]
+
+    permission_classes = (
+        drf_permissions.IsAuthenticatedOrReadOnly,
+        base_permissions.TokenHasScope,
+    )
+
+    pagination_class = SearchPagination
+
+    def __init__(self):
+        self.doc_type = getattr(self, 'doc_type', None)
+
+    def get_queryset(self):
+        # query = self.request.query_params.get('q', '*')
+        query = self.request.data
+        page = int(self.request.query_params.get('page', '1'))
+        page_size = min(int(self.request.query_params.get('page[size]', REST_FRAMEWORK['PAGE_SIZE'])), MAX_PAGE_SIZE)
+        start = (page - 1) * page_size
+        try:
+            # results = search.search(build_query(query, start=start, size=page_size), doc_type=self.doc_type, raw=True)
+            results = search.search(build_query_object(query, start=start, size=page_size), doc_type=self.doc_type, raw=True)
+        except MalformedQueryError as e:
+            raise ValidationError(e.message)
+        return results
 
 class BaseSearchView(JSONAPIBaseView, generics.ListAPIView):
 
@@ -583,44 +610,22 @@ class SearchUsers(BaseSearchView):
     view_name = 'search-user'
 
 
-class SearchInstitutions(BaseSearchView):
+class SearchIPCores(CustomSearchView):
     """
     *Read-Only*
 
-    Institutions that have been found by the given Elasticsearch query.
+    IP Core documents that have been found by the given Elasticsearch query.
+    
+    ## Query Params
 
-    <!-- Copied spiel from InstitutionDetail -->
+    + `q=<JSON>` -- Query hash to search IP Cores for. 
 
-    ##Attributes
-
-    OSF Institutions have the "institutions" `type`.
-
-        name           type               description
-        =========================================================================
-        name           string             title of the institution
-        id             string             unique identifier in the OSF
-        logo_path      string             a path to the institution's static logo
-
-    ##Relationships
-
-    ###Nodes
-    List of nodes that have this institution as its primary institution.
-
-    ###Users
-    List of users that are affiliated with this institution.
-
-    ##Links
-
-        self:  the canonical api endpoint of this institution
-        html:  this institution's page on the OSF website
+    + `page=<Int>` -- page number of results to view, default 1
 
     # This Request/Response
 
     """
 
-    model_class = Institution
-    serializer_class = InstitutionSerializer
-
-    doc_type = 'institution'
+    doc_type = 'ipcore'
     view_category = 'search'
-    view_name = 'search-institution'
+    view_name = 'search-ipcore'

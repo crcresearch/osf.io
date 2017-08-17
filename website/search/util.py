@@ -24,6 +24,22 @@ def build_query(qs='*', start=0, size=10, sort=None):
     return query
 
 
+def build_query_object(q={'query':{'match_all':{}}}, start=0, size=10, sort=None):
+    query = {
+        'query': q.query,
+        'from': start,
+        'size': size,
+    }
+
+    if sort:
+        query['sort'] = [
+            {
+                sort: 'desc'
+            }
+        ]
+    return query
+
+
 # Match queryObject in search.js
 def build_query_string(qs):
     field_boosts = {

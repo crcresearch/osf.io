@@ -46,6 +46,7 @@ ALIASES = {
     'file': 'Files',
     'institution': 'Institutions',
     'preprint': 'Preprints',
+    'ipcore': 'IPCores',
 }
 
 DOC_TYPE_TO_MODEL = {
