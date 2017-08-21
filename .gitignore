@@ -40,6 +40,7 @@ nosetests.xml
 .hg
 .hgignore
 env/
+osf/
 mathenv
 cover/
 .konchrc
