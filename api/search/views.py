@@ -30,6 +30,54 @@ from django.http import HttpResponse
 
 
 class SearchIPCores(APIView):
+    """
+    This endpoint can be used to index, update, delete, and query IP Core documents in elastic search.
+
+    ------------------------------------------
+    ## [POST] /v2/search/ipcores/
+    ## Search for IP Core documents
+    ## Sample Body 
+        ```
+        {
+            "query": {
+                "bool": {
+                    "should": [
+                        {"fuzzy":{"basic-information.subcategory": "Microprocessor" } }
+                    ]
+                }
+
+            }
+        }
+        ```
+
+    ## Query Params
+
+    + `_source=True` -- Optional. Will include the IP Core document as part of the results object.
+
+    ------------------------------------------
+    ## [PUT] /v2/search/ipcores/?id=<project id>
+    ## Index a new IP Core document into elastic search.
+
+    ## Query Params
+     
+    + `id=<project id> -- Required. The project id to which the IP Core doc belongs.
+
+    ------------------------------------------
+    ## [PATCH] /v2/search/ipcores/?id=<project_id>
+    ## Update the IP Core document.
+
+    ## Query Params
+    
+    + `id=<project id> -- Required. The project id to which the IP Core doc belongs.
+
+    ------------------------------------------
+    ## [DELETE] /v2/search/ipcores/?id=<project_id>
+    ## Delete the IP Core document. Typically should only be called when a project has been deleted.
+
+    ## Query Params
+
+    + `id=<project id> -- Required. The project id to which the IP Core doc belongs.
+    """
     required_read_scopes = [CoreScopes.SEARCH]
     required_write_scopes = [CoreScopes.SEARCH]
 
