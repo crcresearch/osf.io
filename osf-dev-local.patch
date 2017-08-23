@@ -1,0 +1,1214 @@
+diff --git a/osf_dev_local_diffs b/osf_dev_local_diffs
+deleted file mode 100644
+index ab7c4c1..0000000
+--- a/osf_dev_local_diffs
++++ /dev/null
+@@ -1,630 +0,0 @@
+-diff --git a/api/base/views.py b/api/base/views.py
+-index 6170b0a..61c3183 100644
+---- a/api/base/views.py
+-+++ b/api/base/views.py
+-@@ -371,7 +371,7 @@ class LinkedRegistrationsRelationship(JSONAPIBaseView, generics.RetrieveUpdateDe
+- @throttle_classes([RootAnonThrottle, UserRateThrottle])
+- def root(request, format=None, **kwargs):
+-     """Welcome to the V2 Open Science Framework API. With this API you can access users, projects, components, logs, and files
+--    from the [Open Science Framework](https://craft.crc.nd.edu/). The Open Science Framework (OSF) is a free, open-source service
+-+    from the [Open Science Framework](https://osf-dev.craftproject.org/). The Open Science Framework (OSF) is a free, open-source service
+-     maintained by the [Center for Open Science](http://cos.io/).
+- 
+-     The OSF serves as a repository and archive for study designs, materials, data, manuscripts, or anything else
+-@@ -625,7 +625,7 @@ def root(request, format=None, **kwargs):
+-     Links are urls to alternative representations of the entity or actions that may be performed on the entity.  Most
+-     entities will provide a `self` link that is the canonical endpoint for the entity where update and delete requests
+-     should be sent.  In-depth documentation of actions is available by navigating to the `self` link in the Browsable
+--    API.  Most entities will also provide an `html` link that directs to the entity's page on the [OSF](https://craft.crc.nd.edu/).
+-+    API.  Most entities will also provide an `html` link that directs to the entity's page on the [OSF](https://osf-dev.craftproject.org/).
+- 
+-     ###Entity Collections
+- 
+-diff --git a/tasks/__init__.py b/tasks/__init__.py
+-index 1f7e8fe..af2edf7 100755
+---- a/tasks/__init__.py
+-+++ b/tasks/__init__.py
+-@@ -378,7 +378,7 @@ def mongorestore(ctx, path, drop=False):
+-     db = settings.DB_NAME
+-     port = settings.DB_PORT
+- 
+--    cmd = 'mongorestore --db {db} --port {port}'.format(
+-+    cmd = 'mongorestore --host 129.74.246.17 --db {db} --port {port}'.format(
+-         db=db,
+-         port=port,
+-         pty=True)
+-diff --git a/tests/test_campaigns.py b/tests/test_campaigns.py
+-deleted file mode 100644
+-index e484c24..0000000
+---- a/tests/test_campaigns.py
+-+++ /dev/null
+-@@ -1,271 +0,0 @@
+--from datetime import datetime, timedelta
+--import httplib as http
+--
+--from nose.tools import *  # noqa (PEP8 asserts)
+--
+--from modularodm.exceptions import KeyExistsException
+--
+--from framework.auth import campaigns, views as auth_views, cas
+--from website.util import web_url_for
+--from website.project.model import ensure_schemas
+--from tests.base import OsfTestCase
+--from tests.factories import PreprintProviderFactory, UserFactory, AuthUserFactory, UnconfirmedUserFactory
+--from tests.utils import mock_auth
+--
+--
+--def set_preprint_providers():
+--    """Populate `PreprintProvider` to test database for testing."""
+--
+--    providers = {
+--        'osf': 'Open Science Framework',
+--        'socarxiv': 'SocArXiv',
+--        'engrxiv': 'EngrXiv',
+--        'psyarxiv': 'PsyArXiv',
+--    }
+--
+--    for key, value in providers.items():
+--        provider = PreprintProviderFactory()
+--        provider._id = key
+--        provider.name = value
+--        try:
+--            provider.save()
+--        except KeyExistsException:
+--            continue
+--
+--
+--# tests for campaign initialization and update
+--class TestCampaignInitialization(OsfTestCase):
+--
+--    def setUp(self):
+--        super(TestCampaignInitialization, self).setUp()
+--        set_preprint_providers()
+--        self.campaign_lists = [
+--            'prereg',
+--            'erpc',
+--            'institution',
+--            'osf-preprints',
+--            'socarxiv-preprints',
+--            'engrxiv-preprints',
+--            'psyarxiv-preprints',
+--        ]
+--        self.refresh = datetime.utcnow()
+--        campaigns.CAMPAIGNS = None
+--        campaigns.CAMPAIGNS_LAST_REFRESHED = self.refresh
+--
+--    def test_get_campaigns_init(self):
+--        campaign_dict = campaigns.get_campaigns()
+--        assert_equal(len(campaign_dict), len(self.campaign_lists))
+--        for campaign in campaign_dict:
+--            assert_in(campaign, self.campaign_lists)
+--        assert_not_equal(self.refresh, campaigns.CAMPAIGNS_LAST_REFRESHED)
+--
+--    def test_get_campaigns_update_not_expired(self):
+--        campaigns.get_campaigns()
+--        self.refresh = campaigns.CAMPAIGNS_LAST_REFRESHED
+--        campaigns.get_campaigns()
+--        assert_equal(self.refresh, campaigns.CAMPAIGNS_LAST_REFRESHED)
+--
+--    def test_get_campaigns_update_expired(self):
+--        campaigns.get_campaigns()
+--        self.refresh = datetime.utcnow() - timedelta(minutes=5)
+--        campaigns.CAMPAIGNS_LAST_REFRESHED = self.refresh
+--        campaigns.get_campaigns()
+--        assert_not_equal(self.refresh, campaigns.CAMPAIGNS_LAST_REFRESHED)
+--
+--
+--# tests for campaign helper methods
+--class TestCampaignMethods(OsfTestCase):
+--
+--    def setUp(self):
+--        super(TestCampaignMethods, self).setUp()
+--        set_preprint_providers()
+--        self.campaign_lists = [
+--            'prereg',
+--            'erpc',
+--            'institution',
+--            'osf-preprints',
+--            'socarxiv-preprints',
+--            'engrxiv-preprints',
+--            'psyarxiv-preprints',
+--        ]
+--        self.invalid_campaign = 'invalid_campaign'
+--
+--    def test_is_institution_login(self):
+--        for campaign in self.campaign_lists:
+--            institution = campaigns.is_institution_login(campaign)
+--            if campaign == 'institution':
+--                assert_true(institution)
+--            else:
+--                assert_false(institution)
+--        institution = campaigns.is_institution_login(self.invalid_campaign)
+--        assert_true(institution is None)
+--
+--    def test_is_native_login(self):
+--        for campaign in self.campaign_lists:
+--            native = campaigns.is_native_login(campaign)
+--            if campaign == 'prereg' or campaign == 'erpc':
+--                assert_true(native)
+--            else:
+--                assert_false(native)
+--        native = campaigns.is_proxy_login(self.invalid_campaign)
+--        assert_true(native is None)
+--
+--    def test_is_proxy_login(self):
+--        for campaign in self.campaign_lists:
+--            proxy = campaigns.is_proxy_login(campaign)
+--            if campaign.endswith('-preprints'):
+--                assert_true(proxy)
+--            else:
+--                assert_false(proxy)
+--        proxy = campaigns.is_proxy_login(self.invalid_campaign)
+--        assert_true(proxy is None)
+--
+--    def test_system_tag_for_campaign(self):
+--        for campaign in self.campaign_lists:
+--            tag = campaigns.system_tag_for_campaign(campaign)
+--            assert_true(tag is not None)
+--        tag = campaigns.system_tag_for_campaign(self.invalid_campaign)
+--        assert_true(tag is None)
+--
+--    def test_email_template_for_campaign(self):
+--        for campaign in self.campaign_lists:
+--            template = campaigns.email_template_for_campaign(campaign)
+--            if campaigns.is_institution_login(campaign):
+--                assert_true(template is None)
+--            else:
+--                assert_true(template is not None)
+--        template = campaigns.email_template_for_campaign(self.invalid_campaign)
+--        assert_true(template is None)
+--
+--    def test_campaign_url_for(self):
+--        for campaign in self.campaign_lists:
+--            url = campaigns.campaign_url_for(campaign)
+--            assert_true(url is not None)
+--        url = campaigns.campaign_url_for(self.invalid_campaign)
+--        assert_true(url is None)
+--
+--    def test_get_service_provider(self):
+--        for campaign in self.campaign_lists:
+--            provider = campaigns.get_service_provider(campaign)
+--            if campaigns.is_proxy_login(campaign):
+--                assert_true(provider is not None)
+--            else:
+--                assert_true(provider is None)
+--        provider = campaigns.get_service_provider(self.invalid_campaign)
+--        assert_true(provider is None)
+--
+--    def test_campaign_for_user(self):
+--        user = UserFactory()
+--        user.system_tags.append('osf_preprints')
+--        user.save()
+--        campaign = campaigns.campaign_for_user(user)
+--        assert_equal(campaign, 'osf-preprints')
+--
+--
+--# tests for prereg, erpc, which follow similar auth login/register logic
+--class TestCampaignsAuthViews(OsfTestCase):
+--
+--    def setUp(self):
+--        super(TestCampaignsAuthViews, self).setUp()
+--        self.campaigns = {
+--            'prereg': {
+--                'title_register': 'Preregistration Challenge',
+--                'title_landing': 'Welcome to the Prereg Challenge!'
+--            },
+--            'erpc': {
+--                'title_register': 'Election Research Preacceptance Competition',
+--                'title_landing': 'Welcome to the Election Research Preacceptance Competition!'
+--            },
+--        }
+--        for key, value in self.campaigns.items():
+--            value.update({'url_login': web_url_for('auth_login', campaign=key)})
+--            value.update({'url_register': web_url_for('auth_register', campaign=key)})
+--            value.update({'url_landing': campaigns.campaign_url_for(key)})
+--        self.user = AuthUserFactory()
+--
+--    def test_campaign_register_view_logged_in(self):
+--        for key, value in self.campaigns.items():
+--            resp = self.app.get(value['url_register'], auth=self.user.auth)
+--            assert_equal(resp.status_code, http.FOUND)
+--            assert_equal(value['url_landing'], resp.headers['Location'])
+--
+--    def test_campaign_register_view_logged_out(self):
+--        for key, value in self.campaigns.items():
+--            resp = self.app.get(value['url_register'])
+--            assert_equal(resp.status_code, http.OK)
+--            assert_in(value['title_register'], resp)
+--
+--    def test_campaign_login_logged_in(self):
+--        for key, value in self.campaigns.items():
+--            resp = self.app.get(value['url_login'], auth=self.user.auth)
+--            assert_equal(resp.status_code, http.FOUND)
+--            assert_in(value['url_landing'], resp.headers['Location'])
+--
+--    def test_campaign_login_logged_out(self):
+--        for key, value in self.campaigns.items():
+--            resp = self.app.get(value['url_login'])
+--            assert_equal(resp.status_code, http.FOUND)
+--            assert_in(value['url_register'], resp.headers['Location'])
+--
+--    def test_campaign_landing_logged_in(self):
+--        ensure_schemas()
+--        for key, value in self.campaigns.items():
+--            resp = self.app.get(value['url_landing'], auth=self.user.auth)
+--            assert_equal(resp.status_code, http.OK)
+--            assert_in(value['title_landing'], resp)
+--
+--    def test_auth_prereg_landing_page_logged_out(self):
+--        for key, value in self.campaigns.items():
+--            resp = self.app.get(value['url_landing'])
+--            assert_equal(resp.status_code, http.FOUND)
+--            assert_in(cas.get_login_url(value['url_landing']), resp.headers['Location'])
+--
+--
+--# tests for registration through campaigns
+--class TestRegistrationThroughCampaigns(OsfTestCase):
+--
+--    def setUp(self):
+--        super(TestRegistrationThroughCampaigns, self).setUp()
+--
+--    def test_confirm_email_get_with_campaign(self):
+--
+--        for key, value in campaigns.get_campaigns().items():
+--            user = UnconfirmedUserFactory()
+--            user.system_tags.append(value.get('system_tag'))
+--            user.save()
+--            token = user.get_confirmation_token(user.username)
+--            kwargs = {
+--                'uid': user._id,
+--            }
+--            with self.app.app.test_request_context(), mock_auth(user):
+--                res = auth_views.confirm_email_get(token, **kwargs)
+--                assert_equal(res.status_code, http.FOUND)
+--                assert_equal(res.location, campaigns.campaign_url_for(key))
+--
+--
+--# tests for institution
+--class TestCampaignsCASInstitutionLogin(OsfTestCase):
+--
+--    def setUp(self):
+--        super(TestCampaignsCASInstitutionLogin, self).setUp()
+--        self.url_login = web_url_for('auth_login', campaign='institution')
+--        self.url_register = web_url_for('auth_register', campaign='institution')
+--        self.service_url = web_url_for('dashboard', _absolute=True)
+--
+--    # go to CAS institution login page if not logged in
+--    def test_institution_not_logged_in(self):
+--        resp = self.app.get(self.url_login)
+--        assert_equal(resp.status_code, http.FOUND)
+--        assert_in(cas.get_login_url(self.service_url, campaign='institution'), resp.headers['Location'])
+--        # register behave the same as login
+--        resp2 = self.app.get(self.url_register)
+--        assert_equal(resp.headers['Location'], resp2.headers['Location'])
+--
+--    # go to target page (service url_ if logged in
+--    def test_institution_logged_in(self):
+--        resp = self.app.get(self.url_login)
+--        assert_equal(resp.status_code, http.FOUND)
+--        assert_in(self.service_url, resp.headers['Location'])
+--        # register behave the same as login
+--        resp2 = self.app.get(self.url_register)
+--        assert_equal(resp.headers['Location'], resp2.headers['Location'])
+-diff --git a/tests/test_mailchimp.py b/tests/test_mailchimp.py
+-deleted file mode 100644
+-index 04d72a1..0000000
+---- a/tests/test_mailchimp.py
+-+++ /dev/null
+-@@ -1,82 +0,0 @@
+--# -*- coding: utf-8 -*-
+--import mock
+--from website import mailchimp_utils
+--from tests.base import OsfTestCase
+--from nose.tools import *  # noqa; PEP8 asserts
+--from tests.factories import UserFactory
+--import mailchimp
+--
+--from framework.celery_tasks import handlers
+--
+--class TestMailChimpHelpers(OsfTestCase):
+--
+--    def setUp(self, *args, **kwargs):
+--        super(TestMailChimpHelpers, self).setUp(*args, **kwargs)
+--        with self.context:
+--            handlers.celery_before_request()
+--
+--    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+--    def test_get_list_id_from_name(self, mock_get_mailchimp_api):
+--        list_name = 'foo'
+--        mock_client = mock.MagicMock()
+--        mock_get_mailchimp_api.return_value = mock_client
+--        mock_client.lists.list.return_value = {'data': [{'id': 1, 'list_name': list_name}]}
+--        list_id = mailchimp_utils.get_list_id_from_name(list_name)
+--        mock_client.lists.list.assert_called_with(filters={'list_name': list_name})
+--        assert_equal(list_id, 1)
+--
+--    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+--    def test_get_list_name_from_id(self, mock_get_mailchimp_api):
+--        list_id = '12345'
+--        mock_client = mock.MagicMock()
+--        mock_get_mailchimp_api.return_value = mock_client
+--        mock_client.lists.list.return_value = {'data': [{'id': list_id, 'name': 'foo'}]}
+--        list_name = mailchimp_utils.get_list_name_from_id(list_id)
+--        mock_client.lists.list.assert_called_with(filters={'list_id': list_id})
+--        assert_equal(list_name, 'foo')
+--
+--    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+--    def test_subscribe_called_with_correct_arguments(self, mock_get_mailchimp_api):
+--        list_name = 'foo'
+--        user = UserFactory()
+--        mock_client = mock.MagicMock()
+--        mock_get_mailchimp_api.return_value = mock_client
+--        mock_client.lists.list.return_value = {'data': [{'id': 1, 'list_name': list_name}]}
+--        list_id = mailchimp_utils.get_list_id_from_name(list_name)
+--        mailchimp_utils.subscribe_mailchimp(list_name, user._id)
+--        handlers.celery_teardown_request()
+--        mock_client.lists.subscribe.assert_called_with(
+--            id=list_id,
+--            email={'email': user.username},
+--            merge_vars={
+--                'fname': user.given_name,
+--                'lname': user.family_name,
+--            },
+--            double_optin=False,
+--            update_existing=True,
+--        )
+--
+--    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+--    def test_subscribe_fake_email_does_not_throw_validation_error(self, mock_get_mailchimp_api):
+--        list_name = 'foo'
+--        user = UserFactory(username='fake@fake.com')
+--        mock_client = mock.MagicMock()
+--        mock_get_mailchimp_api.return_value = mock_client
+--        mock_client.lists.list.return_value = {'data': [{'id': 1, 'list_name': list_name}]}
+--        mock_client.lists.subscribe.side_effect = mailchimp.ValidationError
+--        mailchimp_utils.subscribe_mailchimp(list_name, user._id)
+--        handlers.celery_teardown_request()
+--        assert_false(user.mailchimp_mailing_lists[list_name])
+--
+--    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+--    def test_unsubscribe_called_with_correct_arguments(self, mock_get_mailchimp_api):
+--        list_name = 'foo'
+--        user = UserFactory()
+--        mock_client = mock.MagicMock()
+--        mock_get_mailchimp_api.return_value = mock_client
+--        mock_client.lists.list.return_value = {'data': [{'id': 2, 'list_name': list_name}]}
+--        list_id = mailchimp_utils.get_list_id_from_name(list_name)
+--        mailchimp_utils.unsubscribe_mailchimp_async(list_name, user._id)
+--        handlers.celery_teardown_request()
+--        mock_client.lists.unsubscribe.assert_called_with(id=list_id, email={'email': user.username}, send_goodbye=True)
+--
+-diff --git a/website/addons/wiki/templates/edit.mako b/website/addons/wiki/templates/edit.mako
+-index 68fb664..732f291 100644
+---- a/website/addons/wiki/templates/edit.mako
+-+++ b/website/addons/wiki/templates/edit.mako
+-@@ -399,7 +399,7 @@ ${parent.javascript_bottom()}
+- </script>
+- ##<script src="//${sharejs_url}/text.js"></script>
+- ##<script src="//${sharejs_url}/share.js"></script>
+--<script src="https://osf.craftproject.org/sharejs/text.js"></script>
+--<script src="https://osf.craftproject.org/sharejs/share.js"></script>
+-+<script src="https://osf-dev.craftproject.org/sharejs/text.js"></script>
+-+<script src="https://osf-dev.craftproject.org/sharejs/share.js"></script>
+- <script src=${"/static/public/js/wiki-edit-page.js" | webpack_asset}></script>
+- </%def>
+-diff --git a/website/mails/mails.py b/website/mails/mails.py
+-index 3c8ac35..a669a94 100644
+---- a/website/mails/mails.py
+-+++ b/website/mails/mails.py
+-@@ -101,7 +101,8 @@ def send_mail(to_addr, mail, mimetype='plain', from_addr=None, mailer=None,
+-     ## Don't use ttls or login regardless of DEBUG_MODE setting since they won't work when using smtp.nd.edu - MTV - 9/25/2016
+-     #ttls = login = False
+-     login = False
+--    ttls = not settings.DEBUG_MODE
+-+    #ttls = not settings.DEBUG_MODE
+-+    ttls = False
+-     logger.debug('Sending email...')
+-     logger.debug(u'To: {to_addr}\nFrom: {from_addr}\nSubject: {subject}\nMessage: {message}'.format(**locals()))
+- 
+-diff --git a/website/settings/defaults.py b/website/settings/defaults.py
+-index e0447d7..c12d181 100644
+---- a/website/settings/defaults.py
+-+++ b/website/settings/defaults.py
+-@@ -93,7 +93,7 @@ OSF_SESSION_TIMEOUT = 30 * 24 * 60 * 60  # 30 days in seconds
+- # TODO: Override SECRET_KEY in local.py in production
+- SECRET_KEY = 'CHANGEME'
+- SESSION_COOKIE_SECURE = SECURE_MODE
+--SESSION_COOKIE_HTTPONLY = True
+-+SESSION_COOKIE_HTTPONLY = True #False 
+- 
+- # local path to private key and cert for local development using https, overwrite in local.py
+- OSF_SERVER_KEY = None
+-@@ -551,11 +551,11 @@ else:
+-             'schedule': crontab(minute=0, hour=2),  # Daily 2:00 a.m.
+-             'kwargs': {}
+-         },
+--    #     'analytics-upload': {
+--    #         'task': 'scripts.analytics.upload',
+--    #         'schedule': crontab(minute=0, hour=6),  # Daily 6:00 a.m.
+--    #         'kwargs': {}
+--    #     },
+-+        #'analytics-upload': {
+-+        #    'task': 'scripts.analytics.upload',
+-+        #    'schedule': crontab(minute=0, hour=6),  # Daily 6:00 a.m.
+-+        #    'kwargs': {}
+-+        #},
+-     })
+- 
+- 
+-diff --git a/website/static/js/anonymousLogActionsList.json b/website/static/js/anonymousLogActionsList.json
+-index 458e889..8646b98 100644
+---- a/website/static/js/anonymousLogActionsList.json
+-+++ b/website/static/js/anonymousLogActionsList.json
+-@@ -66,12 +66,12 @@
+-     "node_forked" : "A user created fork from a project",
+-     "node_removed" : "A user removed a project",
+-     "license_changed" : "A user updated the license of a project",
+--    "file_tag_added": "A user added a tag to a file in OSF Storage in a project",
+--    "file_tag_removed": "A user removed tag from a file in OSF Storage in a project",
+--    "osf_storage_file_added" : "A user added a file to OSF Storage in a project",
+--    "osf_storage_folder_created" : "A user created a folder in OSF Storage in a project",
+--    "osf_storage_file_updated" : "A user updated a file in OSF Storage in a project",
+--    "osf_storage_file_removed" : "A user removed a file from OSF Storage in a project",
+-+    "file_tag_added": "A user added a tag to a file in Craft Storage in a project",
+-+    "file_tag_removed": "A user removed tag from a file in Craft Storage in a project",
+-+    "osf_storage_file_added" : "A user added a file to Craft Storage in a project",
+-+    "osf_storage_folder_created" : "A user created a folder in Craft Storage in a project",
+-+    "osf_storage_file_updated" : "A user updated a file in Craft Storage in a project",
+-+    "osf_storage_file_removed" : "A user removed a file from Craft Storage in a project",
+-     "affiliated_institution_added": "A user added an affiliation to a project",
+-     "affiliated_institution_removed": "A user removed an affiliation from a project",
+-     "preprint_initiated": "A user made a project a preprint",
+-diff --git a/website/static/js/logActionsList.json b/website/static/js/logActionsList.json
+-index 39f4c0f..739e722 100644
+---- a/website/static/js/logActionsList.json
+-+++ b/website/static/js/logActionsList.json
+-@@ -66,12 +66,12 @@
+-     "node_forked":  "${user} created fork from ${forked_from}",
+-     "node_removed":  "${user} removed ${node}",
+-     "license_changed" : "${user} updated the license of ${node} ${license}",
+--    "file_tag_added": "${user} added tag ${tag} to ${path} in OSF Storage in ${node}",
+--    "file_tag_removed": "${user} removed tag ${tag} from ${path} in OSF Storage in ${node}",
+--    "osf_storage_file_added" : "${user} added file ${path} to OSF Storage in ${node}",
+--    "osf_storage_folder_created" : "${user} created folder ${path} in OSF Storage in ${node}",
+--    "osf_storage_file_updated" : "${user} updated file ${path} in OSF Storage in ${node}",
+--    "osf_storage_file_removed" : "${user} removed ${path_type} ${path} from OSF Storage in ${node}",
+-+    "file_tag_added": "${user} added tag ${tag} to ${path} in Craft Storage in ${node}",
+-+    "file_tag_removed": "${user} removed tag ${tag} from ${path} in Craft Storage in ${node}",
+-+    "osf_storage_file_added" : "${user} added file ${path} to Craft Storage in ${node}",
+-+    "osf_storage_folder_created" : "${user} created folder ${path} in Craft Storage in ${node}",
+-+    "osf_storage_file_updated" : "${user} updated file ${path} in Craft Storage in ${node}",
+-+    "osf_storage_file_removed" : "${user} removed ${path_type} ${path} from Craft Storage in ${node}",
+-     "affiliated_institution_added": "${user} added ${institution} affiliation to ${node}",
+-     "affiliated_institution_removed": "${user} removed ${institution} affiliation from ${node}",
+-     "preprint_initiated": "${user} made ${node} a ${preprint} on ${preprint_provider} Preprints",
+-diff --git a/website/templates/emails/file_operation_failed.html.mako b/website/templates/emails/file_operation_failed.html.mako
+-index 0f4bbe5..bda0e89 100644
+---- a/website/templates/emails/file_operation_failed.html.mako
+-+++ b/website/templates/emails/file_operation_failed.html.mako
+-@@ -19,7 +19,7 @@
+-                             <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
+-                                 <tr>
+-                                     <td style="border-collapse: collapse;">
+--                                        <img src="https://osf.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+-+                                        <img src="https://osf-dev.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+-                                     </td>
+-                                     <td style="border-collapse: collapse;">
+-                                         <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
+-diff --git a/website/templates/emails/file_operation_success.html.mako b/website/templates/emails/file_operation_success.html.mako
+-index cef5a60..5c8484d 100644
+---- a/website/templates/emails/file_operation_success.html.mako
+-+++ b/website/templates/emails/file_operation_success.html.mako
+-@@ -19,7 +19,7 @@
+-                             <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
+-                                 <tr>
+-                                     <td style="border-collapse: collapse;">
+--                                        <img src="https://osf.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+-+                                        <img src="https://osf-dev.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+-                                     </td>
+-                                     <td style="border-collapse: collapse;">
+-                                         <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
+-diff --git a/website/templates/emails/notify_base.mako b/website/templates/emails/notify_base.mako
+-index 74e1081..89a6c83 100644
+---- a/website/templates/emails/notify_base.mako
+-+++ b/website/templates/emails/notify_base.mako
+-@@ -21,7 +21,7 @@
+-                                 <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
+-                                     <tr>
+-                                         <td style="border-collapse: collapse;">
+--                                            <img src="https://osf.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+-+                                            <img src="https://osf-dev.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+-                                         </td>
+-                                         <td style="border-collapse: collapse;">
+-                                             <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
+-diff --git a/website/templates/nav.mako b/website/templates/nav.mako
+-index 92e050e..6390c48 100644
+---- a/website/templates/nav.mako
+-+++ b/website/templates/nav.mako
+-@@ -18,8 +18,8 @@
+-           </a>
+-       </span>
+-       <!-- /ko -->
+--      <a class="navbar-brand hidden-sm hidden-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
+--      <a class="navbar-brand visible-sm visible-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
+-+      <a class="navbar-brand hidden-sm hidden-xs" href="https://dev.craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
+-+      <a class="navbar-brand visible-sm visible-xs" href="https://dev.craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
+-     </div>
+-     <div id="navbar" class="navbar-collapse collapse navbar-right">
+-       <ul class="nav navbar-nav">
+-@@ -52,7 +52,7 @@
+-           <a href="#" class="dropdown-toggle nav-user-dropdown" data-toggle="dropdown" role="button" aria-expanded="false"><span class="osf-gravatar"><img src="${user_gravatar}" alt="User gravatar"/> </span> ${display_name} <span class="caret"></span></a>
+-           <ul class="dropdown-menu" role="menu">
+-               <li>
+--                  <a href="https://craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
+-+                  <a href="https://dev.craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
+-               </li>
+-               <li>
+-                   <a href="/myprojects/"><i class="fa fa-th-large fa-lg p-r-xs"></i>    My Projects</a>
+-diff --git a/website/templates/project/project_header.mako b/website/templates/project/project_header.mako
+-index 01ebb34..da83345 100644
+---- a/website/templates/project/project_header.mako
+-+++ b/website/templates/project/project_header.mako
+-@@ -30,7 +30,7 @@
+- 
+-                     % endif
+-                         <li>
+--                            <a href="https://craftproject.org/projects/${ node['id'] }"  class="project-title"> 
+-+                            <a href="https://dev.craftproject.org/projects/${ node['id'] }"  class="project-title"> 
+-                                 ${ node['title'] }
+-                             </a>
+-                         </li>
+-@@ -41,7 +41,7 @@
+-                             </a>
+-                         </li>
+-                         <li id="projectNavAdmin">
+--                            <a href="https://craftproject.org/flow/${ node['id'] }">
+-+                            <a href="https://dev.craftproject.org/flow/${ node['id'] }">
+-                                	Craft 
+-                             </a>
+-                         </li>
+-diff --git a/website/templates/project/view_file.mako b/website/templates/project/view_file.mako
+-index d919f23..f348719 100644
+---- a/website/templates/project/view_file.mako
+-+++ b/website/templates/project/view_file.mako
+-@@ -240,8 +240,8 @@
+- 
+-     ##<script src="//${urls['sharejs']}/text.js"></script>
+-     ##<script src="//${urls['sharejs']}/share.js"></script>
+--    <script src="https://osf.craftproject.org/sharejs/text.js"></script>
+--    <script src="https://osf.craftproject.org/sharejs/share.js"></script>
+-+    <script src="https://osf-dev.craftproject.org/sharejs/text.js"></script>
+-+    <script src="https://osf-dev.craftproject.org/sharejs/share.js"></script>
+- 
+-     <script src=${"/static/public/js/file-page.js" | webpack_asset}></script>
+-     <script src=${"/static/public/js/view-file-tree-page.js" | webpack_asset}></script>
+-diff --git a/website/util/paths.py b/website/util/paths.py
+-index 7c742c0..95a670d 100644
+---- a/website/util/paths.py
+-+++ b/website/util/paths.py
+-@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
+- 
+- 
+- def load_asset_paths():
+--    if settings.DEBUG_MODE:
+--        logger.warn('Skipping load of "webpack-assets.json" in DEBUG_MODE.')
+--        return
+-+    #if settings.DEBUG_MODE:
+-+    #    logger.warn('Skipping load of "webpack-assets.json" in DEBUG_MODE.')
+-+    #    return
+-     asset_paths = None
+-     try:
+-         with open(settings.ASSET_HASH_PATH) as fp:
+-@@ -33,7 +33,7 @@ def webpack_asset(path, asset_paths=asset_paths, debug=settings.DEBUG_MODE):
+-     if not asset_paths:
+-         logger.warn('webpack-assets.json has not yet been generated. Falling back to non-cache-busted assets')
+-         return path
+--    if not debug:
+-+    if debug:
+-         key = path.replace(base_static_path, '').replace('.js', '')
+-         hash_path = asset_paths[key]
+-         return os.path.join(base_static_path, hash_path)
+diff --git a/tasks/__init__.py b/tasks/__init__.py
+index 7a0e49d..9e1a8c9 100755
+--- a/tasks/__init__.py
++++ b/tasks/__init__.py
+@@ -378,7 +378,7 @@ def mongorestore(ctx, path, drop=False):
+     db = settings.DB_NAME
+     port = settings.DB_PORT
+ 
+-    cmd = 'mongorestore --db {db} --port {port}'.format(
++    cmd = 'mongorestore --host 129.74.246.17 --db {db} --port {port}'.format(
+         db=db,
+         port=port,
+         pty=True)
+diff --git a/tests/test_campaigns.py b/tests/test_campaigns.py
+deleted file mode 100644
+index e484c24..0000000
+--- a/tests/test_campaigns.py
++++ /dev/null
+@@ -1,271 +0,0 @@
+-from datetime import datetime, timedelta
+-import httplib as http
+-
+-from nose.tools import *  # noqa (PEP8 asserts)
+-
+-from modularodm.exceptions import KeyExistsException
+-
+-from framework.auth import campaigns, views as auth_views, cas
+-from website.util import web_url_for
+-from website.project.model import ensure_schemas
+-from tests.base import OsfTestCase
+-from tests.factories import PreprintProviderFactory, UserFactory, AuthUserFactory, UnconfirmedUserFactory
+-from tests.utils import mock_auth
+-
+-
+-def set_preprint_providers():
+-    """Populate `PreprintProvider` to test database for testing."""
+-
+-    providers = {
+-        'osf': 'Open Science Framework',
+-        'socarxiv': 'SocArXiv',
+-        'engrxiv': 'EngrXiv',
+-        'psyarxiv': 'PsyArXiv',
+-    }
+-
+-    for key, value in providers.items():
+-        provider = PreprintProviderFactory()
+-        provider._id = key
+-        provider.name = value
+-        try:
+-            provider.save()
+-        except KeyExistsException:
+-            continue
+-
+-
+-# tests for campaign initialization and update
+-class TestCampaignInitialization(OsfTestCase):
+-
+-    def setUp(self):
+-        super(TestCampaignInitialization, self).setUp()
+-        set_preprint_providers()
+-        self.campaign_lists = [
+-            'prereg',
+-            'erpc',
+-            'institution',
+-            'osf-preprints',
+-            'socarxiv-preprints',
+-            'engrxiv-preprints',
+-            'psyarxiv-preprints',
+-        ]
+-        self.refresh = datetime.utcnow()
+-        campaigns.CAMPAIGNS = None
+-        campaigns.CAMPAIGNS_LAST_REFRESHED = self.refresh
+-
+-    def test_get_campaigns_init(self):
+-        campaign_dict = campaigns.get_campaigns()
+-        assert_equal(len(campaign_dict), len(self.campaign_lists))
+-        for campaign in campaign_dict:
+-            assert_in(campaign, self.campaign_lists)
+-        assert_not_equal(self.refresh, campaigns.CAMPAIGNS_LAST_REFRESHED)
+-
+-    def test_get_campaigns_update_not_expired(self):
+-        campaigns.get_campaigns()
+-        self.refresh = campaigns.CAMPAIGNS_LAST_REFRESHED
+-        campaigns.get_campaigns()
+-        assert_equal(self.refresh, campaigns.CAMPAIGNS_LAST_REFRESHED)
+-
+-    def test_get_campaigns_update_expired(self):
+-        campaigns.get_campaigns()
+-        self.refresh = datetime.utcnow() - timedelta(minutes=5)
+-        campaigns.CAMPAIGNS_LAST_REFRESHED = self.refresh
+-        campaigns.get_campaigns()
+-        assert_not_equal(self.refresh, campaigns.CAMPAIGNS_LAST_REFRESHED)
+-
+-
+-# tests for campaign helper methods
+-class TestCampaignMethods(OsfTestCase):
+-
+-    def setUp(self):
+-        super(TestCampaignMethods, self).setUp()
+-        set_preprint_providers()
+-        self.campaign_lists = [
+-            'prereg',
+-            'erpc',
+-            'institution',
+-            'osf-preprints',
+-            'socarxiv-preprints',
+-            'engrxiv-preprints',
+-            'psyarxiv-preprints',
+-        ]
+-        self.invalid_campaign = 'invalid_campaign'
+-
+-    def test_is_institution_login(self):
+-        for campaign in self.campaign_lists:
+-            institution = campaigns.is_institution_login(campaign)
+-            if campaign == 'institution':
+-                assert_true(institution)
+-            else:
+-                assert_false(institution)
+-        institution = campaigns.is_institution_login(self.invalid_campaign)
+-        assert_true(institution is None)
+-
+-    def test_is_native_login(self):
+-        for campaign in self.campaign_lists:
+-            native = campaigns.is_native_login(campaign)
+-            if campaign == 'prereg' or campaign == 'erpc':
+-                assert_true(native)
+-            else:
+-                assert_false(native)
+-        native = campaigns.is_proxy_login(self.invalid_campaign)
+-        assert_true(native is None)
+-
+-    def test_is_proxy_login(self):
+-        for campaign in self.campaign_lists:
+-            proxy = campaigns.is_proxy_login(campaign)
+-            if campaign.endswith('-preprints'):
+-                assert_true(proxy)
+-            else:
+-                assert_false(proxy)
+-        proxy = campaigns.is_proxy_login(self.invalid_campaign)
+-        assert_true(proxy is None)
+-
+-    def test_system_tag_for_campaign(self):
+-        for campaign in self.campaign_lists:
+-            tag = campaigns.system_tag_for_campaign(campaign)
+-            assert_true(tag is not None)
+-        tag = campaigns.system_tag_for_campaign(self.invalid_campaign)
+-        assert_true(tag is None)
+-
+-    def test_email_template_for_campaign(self):
+-        for campaign in self.campaign_lists:
+-            template = campaigns.email_template_for_campaign(campaign)
+-            if campaigns.is_institution_login(campaign):
+-                assert_true(template is None)
+-            else:
+-                assert_true(template is not None)
+-        template = campaigns.email_template_for_campaign(self.invalid_campaign)
+-        assert_true(template is None)
+-
+-    def test_campaign_url_for(self):
+-        for campaign in self.campaign_lists:
+-            url = campaigns.campaign_url_for(campaign)
+-            assert_true(url is not None)
+-        url = campaigns.campaign_url_for(self.invalid_campaign)
+-        assert_true(url is None)
+-
+-    def test_get_service_provider(self):
+-        for campaign in self.campaign_lists:
+-            provider = campaigns.get_service_provider(campaign)
+-            if campaigns.is_proxy_login(campaign):
+-                assert_true(provider is not None)
+-            else:
+-                assert_true(provider is None)
+-        provider = campaigns.get_service_provider(self.invalid_campaign)
+-        assert_true(provider is None)
+-
+-    def test_campaign_for_user(self):
+-        user = UserFactory()
+-        user.system_tags.append('osf_preprints')
+-        user.save()
+-        campaign = campaigns.campaign_for_user(user)
+-        assert_equal(campaign, 'osf-preprints')
+-
+-
+-# tests for prereg, erpc, which follow similar auth login/register logic
+-class TestCampaignsAuthViews(OsfTestCase):
+-
+-    def setUp(self):
+-        super(TestCampaignsAuthViews, self).setUp()
+-        self.campaigns = {
+-            'prereg': {
+-                'title_register': 'Preregistration Challenge',
+-                'title_landing': 'Welcome to the Prereg Challenge!'
+-            },
+-            'erpc': {
+-                'title_register': 'Election Research Preacceptance Competition',
+-                'title_landing': 'Welcome to the Election Research Preacceptance Competition!'
+-            },
+-        }
+-        for key, value in self.campaigns.items():
+-            value.update({'url_login': web_url_for('auth_login', campaign=key)})
+-            value.update({'url_register': web_url_for('auth_register', campaign=key)})
+-            value.update({'url_landing': campaigns.campaign_url_for(key)})
+-        self.user = AuthUserFactory()
+-
+-    def test_campaign_register_view_logged_in(self):
+-        for key, value in self.campaigns.items():
+-            resp = self.app.get(value['url_register'], auth=self.user.auth)
+-            assert_equal(resp.status_code, http.FOUND)
+-            assert_equal(value['url_landing'], resp.headers['Location'])
+-
+-    def test_campaign_register_view_logged_out(self):
+-        for key, value in self.campaigns.items():
+-            resp = self.app.get(value['url_register'])
+-            assert_equal(resp.status_code, http.OK)
+-            assert_in(value['title_register'], resp)
+-
+-    def test_campaign_login_logged_in(self):
+-        for key, value in self.campaigns.items():
+-            resp = self.app.get(value['url_login'], auth=self.user.auth)
+-            assert_equal(resp.status_code, http.FOUND)
+-            assert_in(value['url_landing'], resp.headers['Location'])
+-
+-    def test_campaign_login_logged_out(self):
+-        for key, value in self.campaigns.items():
+-            resp = self.app.get(value['url_login'])
+-            assert_equal(resp.status_code, http.FOUND)
+-            assert_in(value['url_register'], resp.headers['Location'])
+-
+-    def test_campaign_landing_logged_in(self):
+-        ensure_schemas()
+-        for key, value in self.campaigns.items():
+-            resp = self.app.get(value['url_landing'], auth=self.user.auth)
+-            assert_equal(resp.status_code, http.OK)
+-            assert_in(value['title_landing'], resp)
+-
+-    def test_auth_prereg_landing_page_logged_out(self):
+-        for key, value in self.campaigns.items():
+-            resp = self.app.get(value['url_landing'])
+-            assert_equal(resp.status_code, http.FOUND)
+-            assert_in(cas.get_login_url(value['url_landing']), resp.headers['Location'])
+-
+-
+-# tests for registration through campaigns
+-class TestRegistrationThroughCampaigns(OsfTestCase):
+-
+-    def setUp(self):
+-        super(TestRegistrationThroughCampaigns, self).setUp()
+-
+-    def test_confirm_email_get_with_campaign(self):
+-
+-        for key, value in campaigns.get_campaigns().items():
+-            user = UnconfirmedUserFactory()
+-            user.system_tags.append(value.get('system_tag'))
+-            user.save()
+-            token = user.get_confirmation_token(user.username)
+-            kwargs = {
+-                'uid': user._id,
+-            }
+-            with self.app.app.test_request_context(), mock_auth(user):
+-                res = auth_views.confirm_email_get(token, **kwargs)
+-                assert_equal(res.status_code, http.FOUND)
+-                assert_equal(res.location, campaigns.campaign_url_for(key))
+-
+-
+-# tests for institution
+-class TestCampaignsCASInstitutionLogin(OsfTestCase):
+-
+-    def setUp(self):
+-        super(TestCampaignsCASInstitutionLogin, self).setUp()
+-        self.url_login = web_url_for('auth_login', campaign='institution')
+-        self.url_register = web_url_for('auth_register', campaign='institution')
+-        self.service_url = web_url_for('dashboard', _absolute=True)
+-
+-    # go to CAS institution login page if not logged in
+-    def test_institution_not_logged_in(self):
+-        resp = self.app.get(self.url_login)
+-        assert_equal(resp.status_code, http.FOUND)
+-        assert_in(cas.get_login_url(self.service_url, campaign='institution'), resp.headers['Location'])
+-        # register behave the same as login
+-        resp2 = self.app.get(self.url_register)
+-        assert_equal(resp.headers['Location'], resp2.headers['Location'])
+-
+-    # go to target page (service url_ if logged in
+-    def test_institution_logged_in(self):
+-        resp = self.app.get(self.url_login)
+-        assert_equal(resp.status_code, http.FOUND)
+-        assert_in(self.service_url, resp.headers['Location'])
+-        # register behave the same as login
+-        resp2 = self.app.get(self.url_register)
+-        assert_equal(resp.headers['Location'], resp2.headers['Location'])
+diff --git a/tests/test_mailchimp.py b/tests/test_mailchimp.py
+deleted file mode 100644
+index 04d72a1..0000000
+--- a/tests/test_mailchimp.py
++++ /dev/null
+@@ -1,82 +0,0 @@
+-# -*- coding: utf-8 -*-
+-import mock
+-from website import mailchimp_utils
+-from tests.base import OsfTestCase
+-from nose.tools import *  # noqa; PEP8 asserts
+-from tests.factories import UserFactory
+-import mailchimp
+-
+-from framework.celery_tasks import handlers
+-
+-class TestMailChimpHelpers(OsfTestCase):
+-
+-    def setUp(self, *args, **kwargs):
+-        super(TestMailChimpHelpers, self).setUp(*args, **kwargs)
+-        with self.context:
+-            handlers.celery_before_request()
+-
+-    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+-    def test_get_list_id_from_name(self, mock_get_mailchimp_api):
+-        list_name = 'foo'
+-        mock_client = mock.MagicMock()
+-        mock_get_mailchimp_api.return_value = mock_client
+-        mock_client.lists.list.return_value = {'data': [{'id': 1, 'list_name': list_name}]}
+-        list_id = mailchimp_utils.get_list_id_from_name(list_name)
+-        mock_client.lists.list.assert_called_with(filters={'list_name': list_name})
+-        assert_equal(list_id, 1)
+-
+-    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+-    def test_get_list_name_from_id(self, mock_get_mailchimp_api):
+-        list_id = '12345'
+-        mock_client = mock.MagicMock()
+-        mock_get_mailchimp_api.return_value = mock_client
+-        mock_client.lists.list.return_value = {'data': [{'id': list_id, 'name': 'foo'}]}
+-        list_name = mailchimp_utils.get_list_name_from_id(list_id)
+-        mock_client.lists.list.assert_called_with(filters={'list_id': list_id})
+-        assert_equal(list_name, 'foo')
+-
+-    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+-    def test_subscribe_called_with_correct_arguments(self, mock_get_mailchimp_api):
+-        list_name = 'foo'
+-        user = UserFactory()
+-        mock_client = mock.MagicMock()
+-        mock_get_mailchimp_api.return_value = mock_client
+-        mock_client.lists.list.return_value = {'data': [{'id': 1, 'list_name': list_name}]}
+-        list_id = mailchimp_utils.get_list_id_from_name(list_name)
+-        mailchimp_utils.subscribe_mailchimp(list_name, user._id)
+-        handlers.celery_teardown_request()
+-        mock_client.lists.subscribe.assert_called_with(
+-            id=list_id,
+-            email={'email': user.username},
+-            merge_vars={
+-                'fname': user.given_name,
+-                'lname': user.family_name,
+-            },
+-            double_optin=False,
+-            update_existing=True,
+-        )
+-
+-    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+-    def test_subscribe_fake_email_does_not_throw_validation_error(self, mock_get_mailchimp_api):
+-        list_name = 'foo'
+-        user = UserFactory(username='fake@fake.com')
+-        mock_client = mock.MagicMock()
+-        mock_get_mailchimp_api.return_value = mock_client
+-        mock_client.lists.list.return_value = {'data': [{'id': 1, 'list_name': list_name}]}
+-        mock_client.lists.subscribe.side_effect = mailchimp.ValidationError
+-        mailchimp_utils.subscribe_mailchimp(list_name, user._id)
+-        handlers.celery_teardown_request()
+-        assert_false(user.mailchimp_mailing_lists[list_name])
+-
+-    @mock.patch('website.mailchimp_utils.get_mailchimp_api')
+-    def test_unsubscribe_called_with_correct_arguments(self, mock_get_mailchimp_api):
+-        list_name = 'foo'
+-        user = UserFactory()
+-        mock_client = mock.MagicMock()
+-        mock_get_mailchimp_api.return_value = mock_client
+-        mock_client.lists.list.return_value = {'data': [{'id': 2, 'list_name': list_name}]}
+-        list_id = mailchimp_utils.get_list_id_from_name(list_name)
+-        mailchimp_utils.unsubscribe_mailchimp_async(list_name, user._id)
+-        handlers.celery_teardown_request()
+-        mock_client.lists.unsubscribe.assert_called_with(id=list_id, email={'email': user.username}, send_goodbye=True)
+-
+diff --git a/website/addons/wiki/templates/edit.mako b/website/addons/wiki/templates/edit.mako
+index 68fb664..732f291 100644
+--- a/website/addons/wiki/templates/edit.mako
++++ b/website/addons/wiki/templates/edit.mako
+@@ -399,7 +399,7 @@ ${parent.javascript_bottom()}
+ </script>
+ ##<script src="//${sharejs_url}/text.js"></script>
+ ##<script src="//${sharejs_url}/share.js"></script>
+-<script src="https://osf.craftproject.org/sharejs/text.js"></script>
+-<script src="https://osf.craftproject.org/sharejs/share.js"></script>
++<script src="https://osf-dev.craftproject.org/sharejs/text.js"></script>
++<script src="https://osf-dev.craftproject.org/sharejs/share.js"></script>
+ <script src=${"/static/public/js/wiki-edit-page.js" | webpack_asset}></script>
+ </%def>
+diff --git a/website/mails/mails.py b/website/mails/mails.py
+index 3c8ac35..a669a94 100644
+--- a/website/mails/mails.py
++++ b/website/mails/mails.py
+@@ -101,7 +101,8 @@ def send_mail(to_addr, mail, mimetype='plain', from_addr=None, mailer=None,
+     ## Don't use ttls or login regardless of DEBUG_MODE setting since they won't work when using smtp.nd.edu - MTV - 9/25/2016
+     #ttls = login = False
+     login = False
+-    ttls = not settings.DEBUG_MODE
++    #ttls = not settings.DEBUG_MODE
++    ttls = False
+     logger.debug('Sending email...')
+     logger.debug(u'To: {to_addr}\nFrom: {from_addr}\nSubject: {subject}\nMessage: {message}'.format(**locals()))
+ 
+diff --git a/website/static/js/anonymousLogActionsList.json b/website/static/js/anonymousLogActionsList.json
+index 458e889..8646b98 100644
+--- a/website/static/js/anonymousLogActionsList.json
++++ b/website/static/js/anonymousLogActionsList.json
+@@ -66,12 +66,12 @@
+     "node_forked" : "A user created fork from a project",
+     "node_removed" : "A user removed a project",
+     "license_changed" : "A user updated the license of a project",
+-    "file_tag_added": "A user added a tag to a file in OSF Storage in a project",
+-    "file_tag_removed": "A user removed tag from a file in OSF Storage in a project",
+-    "osf_storage_file_added" : "A user added a file to OSF Storage in a project",
+-    "osf_storage_folder_created" : "A user created a folder in OSF Storage in a project",
+-    "osf_storage_file_updated" : "A user updated a file in OSF Storage in a project",
+-    "osf_storage_file_removed" : "A user removed a file from OSF Storage in a project",
++    "file_tag_added": "A user added a tag to a file in Craft Storage in a project",
++    "file_tag_removed": "A user removed tag from a file in Craft Storage in a project",
++    "osf_storage_file_added" : "A user added a file to Craft Storage in a project",
++    "osf_storage_folder_created" : "A user created a folder in Craft Storage in a project",
++    "osf_storage_file_updated" : "A user updated a file in Craft Storage in a project",
++    "osf_storage_file_removed" : "A user removed a file from Craft Storage in a project",
+     "affiliated_institution_added": "A user added an affiliation to a project",
+     "affiliated_institution_removed": "A user removed an affiliation from a project",
+     "preprint_initiated": "A user made a project a preprint",
+diff --git a/website/static/js/logActionsList.json b/website/static/js/logActionsList.json
+index 39f4c0f..739e722 100644
+--- a/website/static/js/logActionsList.json
++++ b/website/static/js/logActionsList.json
+@@ -66,12 +66,12 @@
+     "node_forked":  "${user} created fork from ${forked_from}",
+     "node_removed":  "${user} removed ${node}",
+     "license_changed" : "${user} updated the license of ${node} ${license}",
+-    "file_tag_added": "${user} added tag ${tag} to ${path} in OSF Storage in ${node}",
+-    "file_tag_removed": "${user} removed tag ${tag} from ${path} in OSF Storage in ${node}",
+-    "osf_storage_file_added" : "${user} added file ${path} to OSF Storage in ${node}",
+-    "osf_storage_folder_created" : "${user} created folder ${path} in OSF Storage in ${node}",
+-    "osf_storage_file_updated" : "${user} updated file ${path} in OSF Storage in ${node}",
+-    "osf_storage_file_removed" : "${user} removed ${path_type} ${path} from OSF Storage in ${node}",
++    "file_tag_added": "${user} added tag ${tag} to ${path} in Craft Storage in ${node}",
++    "file_tag_removed": "${user} removed tag ${tag} from ${path} in Craft Storage in ${node}",
++    "osf_storage_file_added" : "${user} added file ${path} to Craft Storage in ${node}",
++    "osf_storage_folder_created" : "${user} created folder ${path} in Craft Storage in ${node}",
++    "osf_storage_file_updated" : "${user} updated file ${path} in Craft Storage in ${node}",
++    "osf_storage_file_removed" : "${user} removed ${path_type} ${path} from Craft Storage in ${node}",
+     "affiliated_institution_added": "${user} added ${institution} affiliation to ${node}",
+     "affiliated_institution_removed": "${user} removed ${institution} affiliation from ${node}",
+     "preprint_initiated": "${user} made ${node} a ${preprint} on ${preprint_provider} Preprints",
+diff --git a/website/templates/emails/file_operation_failed.html.mako b/website/templates/emails/file_operation_failed.html.mako
+index 0f4bbe5..bda0e89 100644
+--- a/website/templates/emails/file_operation_failed.html.mako
++++ b/website/templates/emails/file_operation_failed.html.mako
+@@ -19,7 +19,7 @@
+                             <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
+                                 <tr>
+                                     <td style="border-collapse: collapse;">
+-                                        <img src="https://osf.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
++                                        <img src="https://osf-dev.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+                                     </td>
+                                     <td style="border-collapse: collapse;">
+                                         <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
+diff --git a/website/templates/emails/file_operation_success.html.mako b/website/templates/emails/file_operation_success.html.mako
+index cef5a60..5c8484d 100644
+--- a/website/templates/emails/file_operation_success.html.mako
++++ b/website/templates/emails/file_operation_success.html.mako
+@@ -19,7 +19,7 @@
+                             <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
+                                 <tr>
+                                     <td style="border-collapse: collapse;">
+-                                        <img src="https://osf.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
++                                        <img src="https://osf-dev.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+                                     </td>
+                                     <td style="border-collapse: collapse;">
+                                         <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
+diff --git a/website/templates/emails/notify_base.mako b/website/templates/emails/notify_base.mako
+index 74e1081..89a6c83 100644
+--- a/website/templates/emails/notify_base.mako
++++ b/website/templates/emails/notify_base.mako
+@@ -21,7 +21,7 @@
+                                 <table id="header-logo" border="0" style="margin: 0 auto;padding: 0px;">
+                                     <tr>
+                                         <td style="border-collapse: collapse;">
+-                                            <img src="https://osf.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
++                                            <img src="https://osf-dev.craftproject.org/static/img/craft.png" alt="COS logo" width="36" style="border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;">
+                                         </td>
+                                         <td style="border-collapse: collapse;">
+                                             <h2 style="padding: 0;margin: 0;border: none;list-style: none;font-weight: 300;font-size: 20px;text-align: left; color:white;">DARPA Craft Repository</h2>
+diff --git a/website/templates/nav.mako b/website/templates/nav.mako
+index 92e050e..6390c48 100644
+--- a/website/templates/nav.mako
++++ b/website/templates/nav.mako
+@@ -18,8 +18,8 @@
+           </a>
+       </span>
+       <!-- /ko -->
+-      <a class="navbar-brand hidden-sm hidden-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
+-      <a class="navbar-brand visible-sm visible-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
++      <a class="navbar-brand hidden-sm hidden-xs" href="https://dev.craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
++      <a class="navbar-brand visible-sm visible-xs" href="https://dev.craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
+     </div>
+     <div id="navbar" class="navbar-collapse collapse navbar-right">
+       <ul class="nav navbar-nav">
+@@ -52,7 +52,7 @@
+           <a href="#" class="dropdown-toggle nav-user-dropdown" data-toggle="dropdown" role="button" aria-expanded="false"><span class="osf-gravatar"><img src="${user_gravatar}" alt="User gravatar"/> </span> ${display_name} <span class="caret"></span></a>
+           <ul class="dropdown-menu" role="menu">
+               <li>
+-                  <a href="https://craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
++                  <a href="https://dev.craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
+               </li>
+               <li>
+                   <a href="/myprojects/"><i class="fa fa-th-large fa-lg p-r-xs"></i>    My Projects</a>
+diff --git a/website/templates/project/project_header.mako b/website/templates/project/project_header.mako
+index 01ebb34..da83345 100644
+--- a/website/templates/project/project_header.mako
++++ b/website/templates/project/project_header.mako
+@@ -30,7 +30,7 @@
+ 
+                     % endif
+                         <li>
+-                            <a href="https://craftproject.org/projects/${ node['id'] }"  class="project-title"> 
++                            <a href="https://dev.craftproject.org/projects/${ node['id'] }"  class="project-title"> 
+                                 ${ node['title'] }
+                             </a>
+                         </li>
+@@ -41,7 +41,7 @@
+                             </a>
+                         </li>
+                         <li id="projectNavAdmin">
+-                            <a href="https://craftproject.org/flow/${ node['id'] }">
++                            <a href="https://dev.craftproject.org/flow/${ node['id'] }">
+                                	Craft 
+                             </a>
+                         </li>
+diff --git a/website/templates/project/view_file.mako b/website/templates/project/view_file.mako
+index d919f23..f348719 100644
+--- a/website/templates/project/view_file.mako
++++ b/website/templates/project/view_file.mako
+@@ -240,8 +240,8 @@
+ 
+     ##<script src="//${urls['sharejs']}/text.js"></script>
+     ##<script src="//${urls['sharejs']}/share.js"></script>
+-    <script src="https://osf.craftproject.org/sharejs/text.js"></script>
+-    <script src="https://osf.craftproject.org/sharejs/share.js"></script>
++    <script src="https://osf-dev.craftproject.org/sharejs/text.js"></script>
++    <script src="https://osf-dev.craftproject.org/sharejs/share.js"></script>
+ 
+     <script src=${"/static/public/js/file-page.js" | webpack_asset}></script>
+     <script src=${"/static/public/js/view-file-tree-page.js" | webpack_asset}></script>
+diff --git a/website/util/paths.py b/website/util/paths.py
+index 7c742c0..95a670d 100644
+--- a/website/util/paths.py
++++ b/website/util/paths.py
+@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
+ 
+ 
+ def load_asset_paths():
+-    if settings.DEBUG_MODE:
+-        logger.warn('Skipping load of "webpack-assets.json" in DEBUG_MODE.')
+-        return
++    #if settings.DEBUG_MODE:
++    #    logger.warn('Skipping load of "webpack-assets.json" in DEBUG_MODE.')
++    #    return
+     asset_paths = None
+     try:
+         with open(settings.ASSET_HASH_PATH) as fp:
+@@ -33,7 +33,7 @@ def webpack_asset(path, asset_paths=asset_paths, debug=settings.DEBUG_MODE):
+     if not asset_paths:
+         logger.warn('webpack-assets.json has not yet been generated. Falling back to non-cache-busted assets')
+         return path
+-    if not debug:
++    if debug:
+         key = path.replace(base_static_path, '').replace('.js', '')
+         hash_path = asset_paths[key]
+         return os.path.join(base_static_path, hash_path)

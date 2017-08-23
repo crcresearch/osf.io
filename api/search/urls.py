@@ -10,7 +10,6 @@ urlpatterns = [
     url(r'^registrations/$', views.SearchRegistrations.as_view(), name=views.SearchRegistrations.view_name),
     url(r'^users/$', views.SearchUsers.as_view(), name=views.SearchUsers.view_name),
     url(r'^ipcores/$', views.SearchIPCores.as_view(), name='SearchIPCores'),
-
     # not currently supported by v1, but should be supported by v2
     # url(r'^nodes/$', views.SearchProjects.as_view(), name=views.SearchProjects.view_name),
 ]
