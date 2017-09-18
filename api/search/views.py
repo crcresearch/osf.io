@@ -107,14 +107,14 @@ class SearchIPCores(APIView):
     @check_project_id_exists
     def get(self, request, format=None, *args, **kwargs):
         try:
-            results = search.raw_get(id=request.query_params['id'], doc_type='ipcore', _source=bool(request.query_params.get('_source', False)))
+            results = search.raw_get(id=request.query_params['id'], doc_type='ipcore') #_source=bool(request.query_params.get('_source', False)))
             return HttpResponse(json.dumps(results), content_type='application/json')
         except IndexNotFoundError as e:
             return HttpResponse(e[0], content_type='application/json', status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, format=None, *args, **kwargs):
         try:
-            results = search.raw_search(query=request.data, doc_type='ipcore', _source=bool(request.query_params.get('_source', False)))
+            results = search.raw_search(query=request.data, doc_type='ipcore') #, _source=bool(request.query_params.get('_source', False)))
             return HttpResponse(json.dumps(results), content_type='application/json')
         except SearchException as e:
             return HttpResponse(json.dumps(e[0]), content_type='application/json', status=status.HTTP_400_BAD_REQUEST)

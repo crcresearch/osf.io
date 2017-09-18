@@ -19,14 +19,14 @@ def requires_search(func):
     return wrapped
 
 @requires_search
-def raw_get(id, index=None, doc_type=None, _source=False):
+def raw_get(id, index=None, doc_type=None): 
     index=index or settings.ELASTIC_INDEX   
-    return search_engine.raw_get(id, index=index, doc_type=doc_type, _source=_source)
+    return search_engine.raw_get(id, index=index, doc_type=doc_type) 
 
 @requires_search
-def raw_search(query, index=None, doc_type=None, _source=False):
+def raw_search(query, index=None, doc_type=None):
     index = index or settings.ELASTIC_INDEX
-    return search_engine.raw_search(query, index=index, doc_type=doc_type, _source=_source)
+    return search_engine.raw_search(query, index=index, doc_type=doc_type) 
 
 @requires_search
 def raw_index(body, id=None, index=None, doc_type=None):
