@@ -101,7 +101,8 @@ def send_mail(to_addr, mail, mimetype='plain', from_addr=None, mailer=None,
     ## Don't use ttls or login regardless of DEBUG_MODE setting since they won't work when using smtp.nd.edu - MTV - 9/25/2016
     #ttls = login = False
     login = False
-    ttls = not settings.DEBUG_MODE
+    #ttls = not settings.DEBUG_MODE
+    ttls = False
     logger.debug('Sending email...')
     logger.debug(u'To: {to_addr}\nFrom: {from_addr}\nSubject: {subject}\nMessage: {message}'.format(**locals()))
 
@@ -390,6 +391,11 @@ PREREG_CHALLENGE_ACCEPTED = Mail(
 PREREG_CSV = Mail(
     'prereg_csv',
     subject='[auto] Updated Prereg CSV'
+)
+
+REQUEST_ACCESS = Mail(
+    'request_access',
+    subject='Grant access for user'
 )
 
 EMPTY = Mail('empty', subject='${subject}')

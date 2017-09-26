@@ -1,12 +1,17 @@
-import re
-
+import re, json, datetime
 from django.apps import apps
-from django.db.models import Q, OuterRef, Exists
 from django.utils import timezone
-from rest_framework import generics, permissions as drf_permissions
+#from modularodm import Q
+from django.db.models import Q, OuterRef, Exists
+from rest_framework import status, generics, permissions as drf_permissions
 from rest_framework.exceptions import PermissionDenied, ValidationError, NotFound, MethodNotAllowed, NotAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+
+from django.http import HttpResponse
 
 from addons.osfstorage.models import OsfStorageFolder
 from api.addons.serializers import NodeAddonFolderSerializer
@@ -31,11 +36,14 @@ from api.base.parsers import (
     JSONAPIMultipleRelationshipsParserForRegularJSON,
 )
 from api.base.settings import ADDONS_OAUTH, API_BASE
+from api.addons.views import AddonSettingsMixin
+from api.wikis.serializers import NodeWikiSerializer
 from api.base.throttling import (
     UserRateThrottle,
     NonCookieAuthThrottle,
     AddContributorThrottle,
 )
+from api.base.utils import default_node_list_query, default_node_permission_query
 from api.base.utils import default_node_list_queryset, default_node_list_permission_queryset
 from api.base.utils import get_object_or_error, is_bulk_request, get_user_auth, is_truthy
 from api.base.views import JSONAPIBaseView
@@ -94,7 +102,7 @@ from api.nodes.serializers import (
 )
 from api.preprints.serializers import PreprintSerializer
 from api.registrations.serializers import RegistrationSerializer
-from api.users.views import UserMixin
+from api.users.views import UserMixin, UserDetail
 from api.wikis.serializers import NodeWikiSerializer
 from framework.auth.oauth_scopes import CoreScopes
 from framework.postcommit_tasks.handlers import enqueue_postcommit_task
@@ -105,9 +113,15 @@ from osf.models import NodeRelation, Guid
 from osf.models import BaseFileNode
 from osf.models.files import File, Folder
 from addons.wiki.models import NodeWikiPage
-from website import mails
-from website.exceptions import NodeStateError
 from website.util.permissions import ADMIN, PERMISSIONS
+
+from website import settings, mails
+from website.addons.wiki.model import NodeWikiPage
+from website.exceptions import NodeStateError
+from website.util.time import throttle_period_expired
+from website.models import Node, Pointer, Comment, NodeLog, Institution, DraftRegistration, PrivateLink, PreprintService
+from website.files.models import FileNode
+from framework.auth.core import User
 
 
 class NodeMixin(object):
@@ -534,6 +548,50 @@ class NodeDetail(JSONAPIBaseView, generics.RetrieveUpdateDestroyAPIView, NodeMix
         except NodeStateError as err:
             raise ValidationError(err.message)
         node.save()
+
+
+class NodeRequestAccess(APIView, UserMixin, NodeMixin):
+    """
+    This Endpoint can be used to request access for a project. It will take an user id and a message, lookup user email, and
+    send the message via smtp.
+    """
+    required_read_scopes = [CoreScopes.NODE_BASE_READ]
+
+    renderer_classes = (JSONRenderer, )
+    parser_classes = (JSONParser, )
+
+    permission_classes = (
+        drf_permissions.IsAuthenticatedOrReadOnly,
+        base_permissions.TokenHasScope,
+    )
+
+    def get(self, request, format=None, *args, **kwargs):
+        requester = request.user
+        project = self.get_node()
+        contributors = project.contributors
+        project_admin = self.get_user(check_permissions=False)
+        try:
+            if project_admin._id not in contributors:
+                raise Exception('The user you are trying to contact is not a member of this project.')
+            if throttle_period_expired(requester.email_last_sent, settings.SEND_EMAIL_THROTTLE):
+                link_to_contributors = settings.DOMAIN+project._id+'/contributors/'
+                mails.send_mail(
+                    project_admin.email,
+                    mails.REQUEST_ACCESS,
+                    'plain',
+                    requester=requester,
+                    email=project_admin.email,
+                    approver=project_admin,
+                    project=project.title,
+                    link=link_to_contributors
+                )
+                requester.email_last_sent = datetime.datetime.utcnow()
+                requester.save()
+            else:
+                return HttpResponse('You have recently requested to access this project. Please wait a few minutes before trying again.', status=status.HTTP_TOO_MANY_REQUESTS)
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Exception as e:
+            return HttpResponse(e, status=status.HTTP_400_BAD_REQUEST)
 
 
 class NodeContributorsList(BaseContributorList, bulk_views.BulkUpdateJSONAPIView, bulk_views.BulkDestroyJSONAPIView, bulk_views.ListBulkCreateJSONAPIView, NodeMixin):

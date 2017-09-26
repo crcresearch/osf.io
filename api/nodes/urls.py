@@ -10,6 +10,7 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     url(r'^$', views.NodeList.as_view(), name=views.NodeList.view_name),
     url(r'^(?P<node_id>\w+)/$', views.NodeDetail.as_view(), name=views.NodeDetail.view_name),
+    url(r'^(?P<node_id>\w+)/(?P<user_id>\w+)/request_access/$', views.NodeRequestAccess.as_view(), name='NodeRequestAccess'),
     url(r'^(?P<node_id>\w+)/addons/$', views.NodeAddonList.as_view(), name=views.NodeAddonList.view_name),
     url(r'^(?P<node_id>\w+)/addons/(?P<provider>\w+)/$', views.NodeAddonDetail.as_view(), name=views.NodeAddonDetail.view_name),
     url(r'^(?P<node_id>\w+)/addons/(?P<provider>\w+)/folders/$', views.NodeAddonFolderList.as_view(), name=views.NodeAddonFolderList.view_name),
