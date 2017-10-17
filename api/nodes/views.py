@@ -550,6 +550,33 @@ class NodeDetail(JSONAPIBaseView, generics.RetrieveUpdateDestroyAPIView, NodeMix
         node.save()
 
 
+class NodeAdopt(generics.UpdateAPIView, UserMixin, NodeMixin):
+    """Adopts the node (changes its parent)
+    """
+    permission_classes = (
+        IsPublic,
+        drf_permissions.IsAuthenticatedOrReadOnly,
+        base_permissions.TokenHasScope,
+        ExcludeWithdrawals
+    )
+
+    renderer_classes = (JSONRenderer, )
+    parser_classes = (JSONParser, )
+
+    required_read_scopes = [CoreScopes.NODE_FORKS_READ, CoreScopes.NODE_BASE_READ]
+    required_write_scopes = [CoreScopes.NODE_FORKS_WRITE]
+
+    def update(self, request, *args, **kwargs):
+        try:
+            project = self.get_node()
+            parent_id = request.data['parent']
+            parent_node = Node.find(Q('_id', 'eq', parent_id))[0]
+            project = project.adopt(parent_node=parent_node)
+        except Exception as e:
+            return HttpResponse(e, status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(project, status=status.HTTP_200_OK)
+
+
 class NodeRequestAccess(APIView, UserMixin, NodeMixin):
     """
     This Endpoint can be used to request access for a project. It will take an user id and a message, lookup user email, and

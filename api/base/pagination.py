@@ -1,3 +1,4 @@
+import re
 from django.utils import six
 from collections import OrderedDict
 from django.core.urlresolvers import reverse
@@ -33,12 +34,14 @@ class JSONAPIPagination(pagination.PageNumberPagination):
         """
         Builds uri and adds page param.
         """
+	
         url = remove_query_param(self.request.build_absolute_uri(url), '_')
         paginated_url = replace_query_param(url, self.page_query_param, page_number)
-
+	
         if page_number == 1:
             return remove_query_param(paginated_url, self.page_query_param)
 
+	return re.sub(r"/v2/", "/_rest/v2/", paginated_url)
         return paginated_url
 
     def get_self_real_link(self, url):
@@ -111,6 +114,7 @@ class JSONAPIPagination(pagination.PageNumberPagination):
         kwargs = self.request.parser_context['kwargs'].copy()
         embedded = kwargs.pop('is_embedded', None)
         view_name = self.request.parser_context['view'].view_fqn
+
         reversed_url = None
         if embedded:
             reversed_url = reverse(view_name, kwargs=kwargs)

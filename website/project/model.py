@@ -910,6 +910,7 @@ class Node(GuidStoredObject, AddonModelMixin, IdentifierMixin, Commentable, Spam
         for key, value in fields.iteritems():
             if key not in self.WRITABLE_WHITELIST:
                 continue
+
             if self.is_registration and key != 'is_public':
                 raise NodeUpdateError(reason='Registered content cannot be updated', key=key)
             # Title and description have special methods for logging purposes
@@ -1604,6 +1605,24 @@ class Node(GuidStoredObject, AddonModelMixin, IdentifierMixin, Commentable, Spam
         project_signals.node_deleted.send(self)
 
         return True
+
+    def adopt(self, parent_node=None): 
+        """Change the parent of a node.
+        :param String parent_node: node id of the new parent
+        :return: node
+        """
+        if(self is parent_node):
+            print("nope")
+            return self
+        self.parent_node = parent_node
+        parent_node.nodes.append(self)
+        parent_node.save()
+        self.root = parent_node._root._id
+
+        # If you're saving a property, do it above this super call
+        super(Node, self).save()
+
+        return self
 
     def fork_node(self, auth, title=None):
         """Recursively fork a node.
