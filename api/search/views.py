@@ -89,6 +89,7 @@ class SearchIPCores(APIView):
         drf_permissions.IsAuthenticatedOrReadOnly,
         base_permissions.TokenHasScope,
     )
+    doc_type = 'ipcore'
 
     def check_project_id_exists(func):
         def wrapper(self, request, *args, **kwargs):
@@ -96,43 +97,45 @@ class SearchIPCores(APIView):
                 content = {
                     'error': {
                         'message': 'Project id not given.',
-                        'expected' : '/ipcores/?id=<project id>'
+                        'expected' : '/{}/?id=<project id>'.format(self.doc_type)
                     }
                 }
-                return HttpResponse(json.dumps(content), status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+                return HttpResponse(json.dumps(content), status=status.HTTP_400_BAD_REQUEST,
+                                    content_type='application/json')
             return func(self, request, *args, **kwargs)
-
+        
         return wrapper
 
     @check_project_id_exists
     def get(self, request, format=None, *args, **kwargs):
         try:
-            results = search.raw_get(id=request.query_params['id'], doc_type='ipcore') #_source=bool(request.query_params.get('_source', False)))
+            results = search.raw_get(id=request.query_params['id'], doc_type=self.doc_type)
             return HttpResponse(json.dumps(results), content_type='application/json')
         except IndexNotFoundError as e:
             return HttpResponse(e[0], content_type='application/json', status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, format=None, *args, **kwargs):
         try:
-            results = search.raw_search(query=request.data, doc_type='ipcore') #, _source=bool(request.query_params.get('_source', False)))
+            results = search.raw_search(query=request.data, doc_type=self.doc_type)
             return HttpResponse(json.dumps(results), content_type='application/json')
         except SearchException as e:
             return HttpResponse(json.dumps(e[0]), content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
             
     @check_project_id_exists
     def put(self, request, format=None, *args, **kwargs):
-        results = search.raw_index(body=request.data, doc_type='ipcore', id=request.query_params['id'])
+        results = search.raw_index(body=request.data, doc_type=self.doc_type, id=request.query_params['id'])
         return HttpResponse(json.dumps(results), content_type='application/json')
 
     @check_project_id_exists
     def patch(self, request, format=None, *args, **kwargs):
-        results = search.raw_update(body=request.data, doc_type='ipcore', id=request.query_params['id'])
+        results = search.raw_update(body=request.data, doc_type=self.doc_type, id=request.query_params['id'])
         return HttpResponse(json.dumps(results), content_type='application/json')
 
     @check_project_id_exists
     def delete(self, request, format=None, *args, **kwargs):
-        results = search.raw_delete(id=request.query_params['id'], doc_type='ipcore')
+        results = search.raw_delete(id=request.query_params['id'], doc_type=self.doc_type)
         return HttpResponse(json.dumps(results), content_type='application/json')
+
 
 class BaseSearchView(JSONAPIBaseView, generics.ListAPIView):
     required_read_scopes = [CoreScopes.SEARCH]
