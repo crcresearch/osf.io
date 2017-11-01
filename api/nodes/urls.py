@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^(?P<node_id>\w+)/node_links/(?P<node_link_id>\w+)/', views.NodeLinksDetail.as_view(), name=views.NodeLinksDetail.view_name),
     url(r'^(?P<node_id>\w+)/preprints/$', views.NodePreprintsList.as_view(), name=views.NodePreprintsList.view_name),
     url(r'^(?P<node_id>\w+)/registrations/$', views.NodeRegistrationsList.as_view(), name=views.NodeRegistrationsList.view_name),
+    url(r'^(?P<node_id>\w+)/remove_forked_reference/$', views.NodeRemoveForkedReference.as_view(), name='node-remove-forked'),
     url(r'^(?P<node_id>\w+)/relationships/institutions/$', views.NodeInstitutionsRelationship.as_view(), name=views.NodeInstitutionsRelationship.view_name),
     url(r'^(?P<node_id>\w+)/relationships/linked_nodes/$', views.NodeLinkedNodesRelationship.as_view(), name=views.NodeLinkedNodesRelationship.view_name),
     url(r'^(?P<node_id>\w+)/relationships/linked_registrations/$', views.NodeLinkedRegistrationsRelationship.as_view(), name=views.NodeLinkedRegistrationsRelationship.view_name),
