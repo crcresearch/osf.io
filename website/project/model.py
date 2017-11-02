@@ -2285,7 +2285,6 @@ class Node(GuidStoredObject, AddonModelMixin, IdentifierMixin, Commentable, Spam
         :return: node
         """
         if(self is parent_node):
-            print("nope")
             return self
         self.parent_node = parent_node
         parent_node.nodes.append(self)
@@ -2293,6 +2292,17 @@ class Node(GuidStoredObject, AddonModelMixin, IdentifierMixin, Commentable, Spam
         self.root = parent_node._root._id
 
         # If you're saving a property, do it above this super call
+        super(Node, self).save()
+
+        return self
+
+    def remove_forked_reference(self):
+        """Delete the fork of a node.
+        :return: node
+        """
+        self.forked_from = None
+        self.forked_date = None
+        self.is_fork = False
         super(Node, self).save()
 
         return self
