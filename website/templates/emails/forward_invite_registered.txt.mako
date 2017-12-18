@@ -19,3 +19,4 @@ Once you are logged in, you will be able to make contributions to ${node.title}.
 Sincerely,
 
 The CRAFT Repository Robot
+

@@ -74,13 +74,10 @@
                             <li><a href="${node['url']}registrations/">Registrations</a></li>
                         % endif
 
-<<<<<<< HEAD
-=======
                         % if not node['anonymous']:
                             <li><a href="${node['url']}forks/">Forks</a></li>
                         %endif
 -->                        
->>>>>>> make the nav bars appear like app navbars
                         % if user['is_contributor']:
                             <li><a href="${node['url']}contributors/">Contributors</a></li>
                         % endif

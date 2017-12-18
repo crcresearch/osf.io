@@ -37,6 +37,10 @@ from api.base.parsers import (
 )
 from api.base.settings import ADDONS_OAUTH, API_BASE
 from api.addons.views import AddonSettingsMixin
+from api.files.serializers import FileSerializer
+from api.comments.serializers import NodeCommentSerializer, CommentCreateSerializer
+from api.comments.permissions import CanCommentOrPublic
+from api.users.views import UserMixin, UserDetail
 from api.wikis.serializers import NodeWikiSerializer
 from api.base.throttling import (
     UserRateThrottle,

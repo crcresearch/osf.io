@@ -72,21 +72,22 @@ $(document).ready(function(){
                       m('.row', [
                           m(columnSizeClass, m.component(NewAndNoteworthy, {}))
                       ])
-                    ]
-                )),
-                /*
-                m('.prereg', m('.container',
-                    [
-                        m('.row', [
-                            m(columnSizeClass,  m.component(Prereg, {}))
-                        ])
-                    ]
-                )),
-                m('.meetings', m('.container',
-                    [
-                        m('.row', [
-                            m(columnSizeClass,  m.component(MeetingsAndConferences, {}))
-                        ])
+                  ]
+              )),
+              m('.prereg', m('.container',
+                  [
+                      m('.row', [
+                          m(columnSizeClass,  m.component(Prereg, {}))
+                      ])
+
+                  ]
+              )),
+              m('.meetings', m('.container',
+                  [
+                      m('.row', [
+                          m(columnSizeClass,  m.component(MeetingsAndConferences, {}))
+                      ])
+
                   ]
               )),
               m('.preprints', m('.container',

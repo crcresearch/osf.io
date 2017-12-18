@@ -63,6 +63,7 @@
     <meta name="citation_public_url" content="${self.url_meta()}" />
     <meta name="citation_publication_date" content="${self.datecreated_meta()}" />
 
+    <!-- Facebook display -->
     <!-- <meta name="og:image" content="/static/favicon.ico"/> -->
     <meta name="og:title" content="${self.title()}"/>
     <meta name="og:ttl" content="3"/>
@@ -292,6 +293,10 @@
 
 <%def name="category_meta()">
     ### The project category ###
+</%def>
+
+<%def name="og_description()">
+    Hosted on the DARPA Craft Repository
 </%def>
 
 <%def name="url_meta()">

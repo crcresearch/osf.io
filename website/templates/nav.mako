@@ -4,6 +4,7 @@
 
 <nav class="navbar navbar-inverse navbar-fixed-top" id="navbarScope" role="navigation">
     <div class="container">
+<<<<<<< HEAD
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#secondary-navigation" aria-label="Toggle secondary navigation"}}>
                 <span class="sr-only">Toggle navigation</span>
