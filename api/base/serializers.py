@@ -472,10 +472,12 @@ class RelationshipField(ser.HyperlinkedIdentityField):
 
     def __init__(self, related_view=None, related_view_kwargs=None, self_view=None, self_view_kwargs=None,
                  self_meta=None, related_meta=None, always_embed=False, filter=None, filter_key=None, required=False, **kwargs):
+
         related_view = related_view
         self_view = self_view
         related_kwargs = related_view_kwargs
         self_kwargs = self_view_kwargs
+
         self.views = {'related': related_view, 'self': self_view}
         self.view_kwargs = {'related': related_kwargs, 'self': self_kwargs}
         self.related_meta = related_meta
@@ -502,6 +504,7 @@ class RelationshipField(ser.HyperlinkedIdentityField):
             lookup_kwargs = self_kwargs
         if kwargs.get('lookup_url_kwarg', None):
             lookup_kwargs = kwargs.pop('lookup_url_kwarg')
+
         super(RelationshipField, self).__init__(view_name, lookup_url_kwarg=lookup_kwargs, **kwargs)
 
         # Allow a RelationshipField to be modified if explicitly set so
@@ -527,12 +530,15 @@ class RelationshipField(ser.HyperlinkedIdentityField):
         view = self.view_name
         if callable(self.view_name):
             view = view(getattr(resource, field_name))
-        return resolve(
+        theresolve = resolve(
             reverse(
                 view,
                 kwargs=kwargs
             )
         )
+
+
+        return theresolve
 
     def process_related_counts_parameters(self, params, value):
         """
@@ -666,6 +672,11 @@ class RelationshipField(ser.HyperlinkedIdentityField):
 
         if not urls['self'] and not urls['related']:
             urls = None
+
+        #
+        if urls is not None:
+            urls['related'] = re.sub(r"_rest/", "", urls['related'])
+        #
         return urls
 
     def to_esi_representation(self, value, envelope='data'):
@@ -749,6 +760,9 @@ class RelationshipField(ser.HyperlinkedIdentityField):
 
         if url is None:
             raise SkipField
+
+        if url is not None:
+            url['related'] = re.sub(r"_rest/", "", url['related'])
 
         related_url = url['related']
         related_path = urlparse(related_url).path
@@ -1036,7 +1050,8 @@ class NodeFileHyperLinkField(RelationshipField):
     def get_url(self, obj, view_name, request, format):
         if self.kind and obj.kind != self.kind:
             raise SkipField
-        return super(NodeFileHyperLinkField, self).get_url(obj, view_name, request, format)
+        url = super(NodeFileHyperLinkField, self).get_url(obj, view_name, request, format)
+        return url
 
 
 class JSONAPIListSerializer(ser.ListSerializer):
@@ -1170,27 +1185,34 @@ class JSONAPISerializer(BaseAPISerializer):
     # overrides Serializer
     @classmethod
     def many_init(cls, *args, **kwargs):
+
         kwargs['child'] = cls(*args, **kwargs)
+
         return JSONAPIListSerializer(*args, **kwargs)
 
     def invalid_embeds(self, fields, embeds):
+
         fields_check = fields[:]
         for index, field in enumerate(fields_check):
             if getattr(field, 'field', None):
                 fields_check[index] = field.field
         invalid_embeds = set(embeds.keys()) - set(
             [f.field_name for f in fields_check if getattr(f, 'json_api_link', False)])
+
         return invalid_embeds
 
     def to_esi_representation(self, data, envelope='data'):
+
         href = None
         query_params_blacklist = ['page[size]']
         href = self.get_absolute_url(data)
         if href and href != '{}':
             esi_url = furl.furl(href).add(args=dict(self.context['request'].query_params)).remove(
                 args=query_params_blacklist).remove(args=['envelope']).add(args={'envelope': envelope}).url
+
             return '<esi:include src="{}"/>'.format(esi_url)
         # failsafe, let python do it if something bad happened in the ESI construction
+
         return super(JSONAPISerializer, self).to_representation(data)
 
     # overrides Serializer
@@ -1200,10 +1222,14 @@ class JSONAPISerializer(BaseAPISerializer):
         :param obj: Object to be serialized.
         :param envelope: Key for resource object.
         """
+
         ret = {}
+
         meta = getattr(self, 'Meta', None)
         type_ = getattr(meta, 'type_', None)
+
         assert type_ is not None, 'Must define Meta.type_'
+
         self.parse_sparse_fields(allow_unsafe=True, context=self.context)
 
         data = {
@@ -1216,11 +1242,15 @@ class JSONAPISerializer(BaseAPISerializer):
         }
 
         embeds = self.context.get('embed', {})
+
         context_envelope = self.context.get('envelope', envelope)
+
         if context_envelope == 'None':
             context_envelope = None
         enable_esi = self.context.get('enable_esi', False)
+
         is_anonymous = is_anonymized(self.context['request'])
+
         to_be_removed = set()
         if is_anonymous and hasattr(self, 'non_anonymized_fields'):
             # Drop any fields that are not specified in the `non_anonymized_fields` variable.
@@ -1231,32 +1261,43 @@ class JSONAPISerializer(BaseAPISerializer):
         fields = [field for field in self.fields.values() if
                   not field.write_only and field.field_name not in to_be_removed]
 
+
         invalid_embeds = self.invalid_embeds(fields, embeds)
         invalid_embeds = invalid_embeds - to_be_removed
+
         if invalid_embeds:
+
             raise InvalidQueryStringError(parameter='embed',
                                           detail='The following fields are not embeddable: {}'.format(
                                               ', '.join(invalid_embeds)))
 
         for field in fields:
             try:
+                #
                 attribute = field.get_attribute(obj)
+                #
             except SkipField:
                 continue
 
             nested_field = getattr(field, 'field', None)
+
+
             if attribute is None:
                 # We skip `to_representation` for `None` values so that
                 # fields do not have to explicitly deal with that case.
                 data['attributes'][field.field_name] = None
             else:
                 try:
+                    #print("attempting field.to_representation")
                     if hasattr(attribute, 'all'):
+                        #print("f.tr has all")
                         representation = field.to_representation(attribute.all())
                     else:
+                        #print("f.tr")
                         representation = field.to_representation(attribute)
                 except SkipField:
                     continue
+                #print("attr not none 3")
                 if getattr(field, 'json_api_link', False) or getattr(nested_field, 'json_api_link', False):
                     # If embed=field_name is appended to the query string or 'always_embed' flag is True, directly embed the
                     # results in addition to adding a relationship link
@@ -1281,6 +1322,11 @@ class JSONAPISerializer(BaseAPISerializer):
                         if not (is_anonymous and
                                     hasattr(field, 'view_name') and
                                         field.view_name in self.views_to_hide_if_anonymous):
+                            if 'links' in representation and \
+                                    'related' in representation['links'] and \
+                                    'href' in representation['links']['related']:
+                                representation['links']['related']['href'] = \
+                                    re.sub(r"v2", "_rest/v2", representation['links']['related']['href'])
                             data['relationships'][field.field_name] = representation
                     except SkipField:
                         continue
@@ -1291,6 +1337,7 @@ class JSONAPISerializer(BaseAPISerializer):
                 else:
                     data['attributes'][field.field_name] = representation
 
+        #print("here13")
         if not data['relationships']:
             del data['relationships']
 
@@ -1303,13 +1350,18 @@ class JSONAPISerializer(BaseAPISerializer):
                 ret['meta'] = {'anonymous': True}
         else:
             ret = data
+
+        #print("JSONAPISerializer.to_representation(): End")
         return ret
 
     def get_absolute_url(self, obj):
         raise NotImplementedError()
 
     def get_absolute_html_url(self, obj):
-        return extend_querystring_if_key_exists(obj.absolute_url, self.context['request'], 'view_only')
+        #print("JSONAPISerializer.GET_ABSOLUTE_html_url(): Begin")
+        extend = extend_querystring_if_key_exists(obj.absolute_url, self.context['request'], 'view_only')
+        #print("JSONAPISerializer.GET_ABSOLUTE_html_url(): End")
+        return extend
 
     # overrides Serializer: Add HTML-sanitization similar to that used by APIv1 front-end views
     def is_valid(self, clean_html=True, **kwargs):
@@ -1319,6 +1371,7 @@ class JSONAPISerializer(BaseAPISerializer):
         Exclude 'type' and '_id' from validated_data.
 
         """
+        #print("JSONAPISerializer.is_valid(): Begin")
         ret = super(JSONAPISerializer, self).is_valid(**kwargs)
 
         if clean_html is True:
@@ -1330,10 +1383,14 @@ class JSONAPISerializer(BaseAPISerializer):
         if self.context['request'].method in utils.UPDATE_METHODS:
             self._validated_data.pop('_id', None)
 
+        #print("JSONAPISerializer.is_valid(): End")
         return ret
 
     def sanitize_data(self):
-        return website_utils.rapply(self.validated_data, strip_html)
+        #print("JSONAPISerializer.sanitize_data(): Begin")
+        dowebutilsapply = website_utils.rapply(self.validated_data, strip_html)
+        #print("JSONAPISerializer.sanitize_data(): End")
+        return dowebutilsapply
 
 
 class JSONAPIRelationshipSerializer(BaseAPISerializer):

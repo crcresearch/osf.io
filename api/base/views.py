@@ -38,12 +38,15 @@ from osf.models import Contributor, MaintenanceState, BaseFileNode
 class JSONAPIBaseView(generics.GenericAPIView):
 
     def __init__(self, **kwargs):
+
         assert getattr(self, 'view_name', None), 'Must specify view_name on view.'
         assert getattr(self, 'view_category', None), 'Must specify view_category on view.'
         self.view_fqn = ':'.join([self.view_category, self.view_name])
+
         super(JSONAPIBaseView, self).__init__(**kwargs)
 
     def _get_embed_partial(self, field_name, field):
+
         """Create a partial function to fetch the values of an embedded field. A basic
         example is to include a Node's children in a single response.
 
@@ -55,6 +58,7 @@ class JSONAPIBaseView(generics.GenericAPIView):
             field = field.field
 
         def partial(item):
+
             # resolve must be implemented on the field
             v, view_args, view_kwargs = field.resolve(item, field_name, self.request)
             if not v:
@@ -130,11 +134,15 @@ class JSONAPIBaseView(generics.GenericAPIView):
             # Cache our final result
             cache[_cache_key] = ret
 
+
+
             return ret
+
 
         return partial
 
     def get_serializer_context(self):
+
         """Inject request into the serializer context. Additionally, inject partial functions
         (request, object -> embed items) if the query string contains embeds.  Allows
          multiple levels of nesting.
@@ -175,6 +183,8 @@ class JSONAPIBaseView(generics.GenericAPIView):
             'embed': embeds_partials,
             'envelope': self.request.query_params.get('envelope', 'data'),
         })
+
+
         return context
 
 
@@ -798,6 +808,7 @@ class BaseContributorDetail(JSONAPIBaseView, generics.RetrieveAPIView):
     def get_object(self):
         node = self.get_node()
         user = self.get_user()
+
         # May raise a permission denied
         self.check_object_permissions(self.request, user)
         try:

@@ -79,7 +79,7 @@ django-password-reset==1.0
 sendgrid-django==2.0.0
 
 # Analytics requirements
-keen==0.5.1
+#keen==0.5.1
 python-geoip-geolite2==2015.0303
 
 # OSF models

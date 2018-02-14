@@ -2,7 +2,8 @@
 import uuid
 
 from framework import bcrypt
-from framework.auth import signals
+#from framework.auth import signals
+import signals
 from framework.auth.core import Auth
 from framework.auth.core import get_user, generate_verification_key
 from framework.auth.exceptions import DuplicateEmailError

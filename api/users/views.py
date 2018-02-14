@@ -55,6 +55,7 @@ class UserMixin(object):
     user_lookup_url_kwarg = 'user_id'
 
     def get_user(self, check_permissions=True):
+
         key = self.kwargs[self.user_lookup_url_kwarg]
         # If Contributor is in self.request.parents,
         # then this view is getting called due to an embedded request (contributor embedding user)
@@ -65,29 +66,46 @@ class UserMixin(object):
             contrib_id, contrib = self.request.parents[Contributor].items()[0]
             user = contrib.user
             if user.is_disabled:
+
                 raise UserGone(user=user)
             # Make sure that the contributor ID is correct
             if user._id == key:
                 if check_permissions:
                     self.check_object_permissions(self.request, user)
+                #
+                #
+
                 return user
 
         if self.kwargs.get('is_embedded') is True:
             if key in self.request.parents[OSFUser]:
+                #
+                #
+
                 return self.request.parents[key]
 
         current_user = self.request.user
 
         if key == 'me':
             if isinstance(current_user, AnonymousUser):
+                #
+
                 raise NotAuthenticated
             else:
+
+
                 return self.request.user
 
         obj = get_object_or_error(OSFUser, key, self.request, 'user')
+
+
         if check_permissions:
             # May raise a permission denied
             self.check_object_permissions(self.request, obj)
+
+
+
+
         return obj
 
 
@@ -248,9 +266,9 @@ class UserDetail(JSONAPIBaseView, generics.RetrieveUpdateAPIView, UserMixin):
 
     """
     permission_classes = (
-        drf_permissions.IsAuthenticatedOrReadOnly,
-        ReadOnlyOrCurrentUser,
-        base_permissions.TokenHasScope,
+        # drf_permissions.IsAuthenticatedOrReadOnly,
+        # ReadOnlyOrCurrentUser,
+        # base_permissions.TokenHasScope,
     )
 
     required_read_scopes = [CoreScopes.USERS_READ]
@@ -261,21 +279,31 @@ class UserDetail(JSONAPIBaseView, generics.RetrieveUpdateAPIView, UserMixin):
     serializer_class = UserDetailSerializer
 
     def get_serializer_class(self):
+
         if self.request.auth:
             scopes = self.request.auth.attributes['accessTokenScope']
             if (CoreScopes.USER_EMAIL_READ in normalize_scopes(scopes) and self.request.user == self.get_user()):
                 return ReadEmailUserDetailSerializer
+
+
         return UserDetailSerializer
 
     # overrides RetrieveAPIView
     def get_object(self):
-        return self.get_user()
+
+        user = self.get_user()
+
+
+        return user
 
     # overrides RetrieveUpdateAPIView
     def get_serializer_context(self):
+
         # Serializer needs the request in order to make an update to privacy
         context = JSONAPIBaseView.get_serializer_context(self)
         context['request'] = self.request
+
+
         return context
 
 
@@ -462,6 +490,7 @@ class UserAddonAccountDetail(JSONAPIBaseView, generics.RetrieveAPIView, UserMixi
 
         account = ExternalAccount.load(account_id)
         if not (account and user_settings.external_accounts.filter(id=account.id).exists()):
+
             raise NotFound('Requested addon unavailable')
         return account
 
@@ -541,8 +570,12 @@ class UserNodes(JSONAPIBaseView, generics.ListAPIView, UserMixin, NodesFilterMix
     def get_default_queryset(self):
         user = self.get_user()
         if user != self.request.user:
-            return default_node_list_permission_queryset(user=self.request.user, model_cls=Node).filter(contributor__user__id=user.id)
-        return default_node_list_queryset(model_cls=Node).filter(contributor__user__id=user.id)
+            queryset = default_node_list_permission_queryset(user=self.request.user, model_cls=Node).filter(contributor__user__id=user.id)
+            #
+            return queryset
+        queryset = default_node_list_queryset(model_cls=Node).filter(contributor__user__id=user.id)
+        #
+        return queryset
 
     # overrides ListAPIView
     def get_queryset(self):
@@ -565,6 +598,7 @@ class UserQuickFiles(JSONAPIBaseView, generics.ListAPIView, WaterButlerMixin, Us
 
     required_read_scopes = [CoreScopes.USERS_READ]
     required_write_scopes = [CoreScopes.USERS_WRITE]
+
 
     serializer_class = UserQuickFilesSerializer
     view_category = 'users'

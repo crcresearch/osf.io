@@ -27,7 +27,10 @@ class QuickFilesNodeManager(AbstractNodeManager):
         return quickfiles
 
     def get_for_user(self, user):
-        return QuickFilesNode.objects.get(creator=user)
+        try:
+            return QuickFilesNode.objects.get(creator=user)
+        except QuickFilesNode.DoesNotExist:
+            return []
 
 
 class QuickFilesNode(AbstractNode):

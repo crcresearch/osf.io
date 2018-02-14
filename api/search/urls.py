@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^projects/$', views.SearchProjects.as_view(), name=views.SearchProjects.view_name),
     url(r'^registrations/$', views.SearchRegistrations.as_view(), name=views.SearchRegistrations.view_name),
     url(r'^users/$', views.SearchUsers.as_view(), name=views.SearchUsers.view_name),
-    url(r'^institutions/$', views.SearchInstitutions.as_view(), name=views.SearchInstitutions.view_name),
+    #url(r'^institutions/$', views.SearchInstitutions.as_view(), name=views.SearchInstitutions.view_name),
     url(r'^ipcores/$', views.SearchIPCores.as_view(), name='SearchIPCores'),
     url(r'^flows/$', views.SearchIPCores.as_view(doc_type='flow'), name='SearchFlows'),
     url(r'^list/$', views.SearchIPCores.as_view(doc_type='ipcore,flow'), name='SearchCoresFlows'),

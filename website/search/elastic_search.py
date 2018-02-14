@@ -188,24 +188,24 @@ def get_tags(query, index):
 
 @requires_search
 def raw_get(id, index=None, doc_type='_all'):
-    return es.get(index=index, doc_type=doc_type, id=id, _source='meta.*')
+    return client().get(index=index, doc_type=doc_type, id=id, _source='meta.*')
 
 @requires_search
 def raw_search(query, index=None, doc_type='_all'):
-    return es.search(index=index, doc_type=doc_type, body=query, _source='meta.*')
+    return client().search(index=index, doc_type=doc_type, body=query, _source='meta.*')
 
 @requires_search
 def raw_index(body, index=None, doc_type='_all', id=None):
-    return es.index(index=index, doc_type=doc_type, body=body, id=id)
+    return client().index(index=index, doc_type=doc_type, body=body, id=id)
 
 @requires_search
 def raw_delete(id, index=None, doc_type=None):
-    return es.delete(index=index, doc_type=doc_type, id=id, refresh=True)
+    return client().delete(index=index, doc_type=doc_type, id=id, refresh=True)
 
 @requires_search
 def raw_update(body, id, index=None, doc_type=None):
     doc = {'doc':body}
-    return es.update(index=index, doc_type=doc_type, id=id, body=doc, refresh=True)
+    return client().update(index=index, doc_type=doc_type, id=id, body=doc, refresh=True)
 
 @requires_search
 def search(query, index=None, doc_type='_all', raw=False):

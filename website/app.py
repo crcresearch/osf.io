@@ -99,6 +99,7 @@ def init_app(settings_module='website.settings', set_backends=True, routes=True,
 
     # The settings module
     settings = importlib.import_module(settings_module)
+    #settings.configure()
 
     init_addons(settings, routes)
     with open(os.path.join(settings.STATIC_FOLDER, 'built', 'nodeCategories.json'), 'wb') as fp:

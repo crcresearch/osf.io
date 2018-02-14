@@ -25,6 +25,6 @@ from website.app import init_app  # noqa
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'admin.base.settings')
 
-init_app(set_backends=True, routes=False, attach_request_handlers=False)
+init_app(settings_module='admin.base.settings',set_backends=True, routes=False, attach_request_handlers=False)
 
 application = get_wsgi_application()

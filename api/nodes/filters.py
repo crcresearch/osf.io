@@ -12,6 +12,8 @@ from osf.models import NodeRelation, AbstractNode
 class NodesFilterMixin(ListFilterMixin):
 
     def param_queryset(self, query_params, default_queryset):
+        # print(default_queryset.values())
+        # print(query_params)
         filters = self.parse_query_params(query_params)
         queryset = default_queryset
 
@@ -23,7 +25,9 @@ class NodesFilterMixin(ListFilterMixin):
                         queryset = queryset.get_roots()
                         query_params = deepcopy(query_params)
                         query_params.pop(key)
-        return super(NodesFilterMixin, self).param_queryset(query_params, queryset)
+        p_queryset = super(NodesFilterMixin, self).param_queryset(query_params, queryset)
+        # print(p_queryset)
+        return p_queryset
 
     def build_query_from_field(self, field_name, operation):
         if field_name == 'parent':

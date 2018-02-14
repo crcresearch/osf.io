@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 from website.settings import CeleryConfig
+f = open('celery_log', 'a')
+f.write("hello in routers")
+f.close()  
 
 def match_by_module(task_path):
+    f = open('celery_log', 'a')
+    f.write("hello in routers")
+    f.close()  
     task_parts = task_path.split('.')
     for i in range(2, len(task_parts) + 1):
         task_subpath = '.'.join(task_parts[:i])

@@ -8,6 +8,9 @@ from raven import Client
 
 from website import settings
 
+f = open('celery_log', 'a')
+f.write("hello in utils")
+f.close()  
 logger = logging.getLogger(__name__)
 sentry = Client(dsn=settings.SENTRY_DSN, release=settings.VERSION, tags={'App': 'celery'})
 
@@ -17,8 +20,14 @@ CREATED = 'created'
 STARTED = 'started'
 COMPLETED = 'completed'
 
+f = open('celery_log', 'a')
+f.write("hello in utils")
+f.close()  
 
 def log_to_sentry(message, **kwargs):
+    f = open('celery_log', 'a')
+    f.write(message)
+    f.close()  
     if not settings.SENTRY_DSN:
         return logger.warn('send_to_raven called with no SENTRY_DSN')
     return sentry.captureMessage(message, extra=kwargs)
@@ -28,10 +37,18 @@ def dispatch(_event, status, _index=None, **kwargs):
     if _index:
         _event = '{}.{}'.format(_event, _index)
 
+    f = open('celery_log', 'a')
+    f.write('[{}][{}]{!r}'.format(_event, status, kwargs))
+    f.close()  
+    
     logger.debug('[{}][{}]{!r}'.format(_event, status, kwargs))
 
 
 def logged(event, index=None):
+    
+    f = open('celery_log', 'a')
+    f.write(event)
+    f.close()  
     def _logged(func):
         @wraps(func)
         def wrapped(*args, **kwargs):

@@ -695,23 +695,3 @@ class SearchUsers(BaseSearchView):
     view_category = 'search'
     view_name = 'search-user'
 
-
-class SearchIPCores(CustomSearchView):
-    """
-    *Read-Only*
-
-    IP Core documents that have been found by the given Elasticsearch query.
-    
-    ## Query Params
-
-    + `q=<JSON>` -- Query hash to search IP Cores for. 
-
-    + `page=<Int>` -- page number of results to view, default 1
-
-    # This Request/Response
-
-    """
-
-    doc_type = 'ipcore'
-    view_category = 'search'
-    view_name = 'search-ipcore'

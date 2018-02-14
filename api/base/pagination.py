@@ -34,14 +34,14 @@ class JSONAPIPagination(pagination.PageNumberPagination):
         """
         Builds uri and adds page param.
         """
-	
+
         url = remove_query_param(self.request.build_absolute_uri(url), '_')
         paginated_url = replace_query_param(url, self.page_query_param, page_number)
-	
+
         if page_number == 1:
             return remove_query_param(paginated_url, self.page_query_param)
 
-	return re.sub(r"/v2/", "/_rest/v2/", paginated_url)
+        return re.sub(r"/v2/", "/_rest/v2/", paginated_url)
         return paginated_url
 
     def get_self_real_link(self, url):

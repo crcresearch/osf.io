@@ -20,16 +20,19 @@ class QuickFilesRelationshipField(RelationshipField):
 
     def to_representation(self, value):
         relationship_links = super(QuickFilesRelationshipField, self).to_representation(value)
-        quickfiles_guid = value.nodes_created.filter(type=QuickFilesNode._typedmodels_type).values_list('guids___id', flat=True).get()
-        upload_url = website_utils.waterbutler_api_url_for(quickfiles_guid, 'osfstorage')
-        relationship_links['links']['upload'] = {
-            'href': upload_url,
-            'meta': {}
-        }
-        relationship_links['links']['download'] = {
-            'href': '{}?zip='.format(upload_url),
-            'meta': {}
-        }
+        try:
+            quickfiles_guid = value.nodes_created.filter(type=QuickFilesNode._typedmodels_type).values_list('guids___id', flat=True).get()
+            upload_url = website_utils.waterbutler_api_url_for(quickfiles_guid, 'osfstorage')
+            relationship_links['links']['upload'] = {
+                'href': upload_url,
+                'meta': {}
+            }
+            relationship_links['links']['download'] = {
+                'href': '{}?zip='.format(upload_url),
+                'meta': {}
+            }
+        except Exception:
+            pass
         return relationship_links
 
 
@@ -54,6 +57,7 @@ class UserSerializer(JSONAPISerializer):
     timezone = HideIfDisabled(ser.CharField(required=False, help_text="User's timezone, e.g. 'Etc/UTC"))
     locale = HideIfDisabled(ser.CharField(required=False, help_text="User's locale, e.g.  'en_US'"))
     social = ListDictField(required=False)
+
     can_view_reviews = ShowIfCurrentUser(ser.SerializerMethodField(help_text='Whether the current user has the `view_submissions` permission to ANY reviews provider.'))
 
     links = HideIfDisabled(LinksField(
@@ -102,29 +106,43 @@ class UserSerializer(JSONAPISerializer):
     def get_projects_in_common(self, obj):
         user = get_user_auth(self.context['request']).user
         if obj == user:
+
             return user.contributor_to.count()
         return obj.n_projects_in_common(user)
 
     def absolute_url(self, obj):
+
         if obj is not None:
+
             return obj.absolute_url
+
         return None
 
     def get_absolute_url(self, obj):
-        return absolute_reverse('users:user-detail', kwargs={
+
+        a_url = absolute_reverse('users:user-detail', kwargs={
             'user_id': obj._id,
             'version': self.context['request'].parser_context['kwargs']['version']
         })
 
+        return a_url
+
     def get_can_view_reviews(self, obj):
+
         group_qs = GroupObjectPermission.objects.filter(group__user=obj, permission__codename='view_submissions')
-        return group_qs.exists() or obj.userobjectpermission_set.filter(permission__codename='view_submissions')
+        thsortht = group_qs.exists() or obj.userobjectpermission_set.filter(permission__codename='view_submissions')
+
+        return thsortht
 
     def profile_image_url(self, user):
+
         size = self.context['request'].query_params.get('profile_image_size')
-        return user.profile_image_url(size=size)
+        p_img = user.profile_image_url(size=size)
+
+        return p_img
 
     def update(self, instance, validated_data):
+
         assert isinstance(instance, OSFUser), 'instance must be a User'
         for attr, value in validated_data.items():
             if 'social' == attr:
@@ -134,6 +152,7 @@ class UserSerializer(JSONAPISerializer):
                         instance.social[key] = val
                     else:
                         if len(val) > 1:
+
                             raise InvalidModelValueError(
                                 detail='{} only accept a list of one single value'. format(key)
                             )
@@ -143,9 +162,12 @@ class UserSerializer(JSONAPISerializer):
         try:
             instance.save()
         except ValidationValueError as e:
+
             raise InvalidModelValueError(detail=e.message)
         except ValidationError as e:
+
             raise InvalidModelValueError(e)
+
 
         return instance
 

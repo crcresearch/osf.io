@@ -18,18 +18,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-DATABASES = {
-    'default': {
-        'CONN_MAX_AGE': 0,
-        'ENGINE': 'osf.db.backends.postgresql',  # django.db.backends.postgresql
-        'NAME': os.environ.get('OSF_DB_NAME', 'osf'),
-        'USER': os.environ.get('OSF_DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('OSF_DB_PASSWORD', ''),
-        'HOST': os.environ.get('OSF_DB_HOST', '127.0.0.1'),
-        'PORT': os.environ.get('OSF_DB_PORT', '5432'),
-        'ATOMIC_REQUESTS': True,
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'CONN_MAX_AGE': 0,
+#        'ENGINE': 'osf.db.backends.postgresql',  # django.db.backends.postgresql
+#        'NAME': os.environ.get('OSF_DB_NAME', 'osf'),
+#        'USER': os.environ.get('OSF_DB_USER', 'postgres'),
+#        'PASSWORD': os.environ.get('OSF_DB_PASSWORD', ''),
+#        'HOST': os.environ.get('OSF_DB_HOST', '127.0.0.1'),
+#        'PORT': os.environ.get('OSF_DB_PORT', '5432'),
+#        'ATOMIC_REQUESTS': True,
+#    }
+#}
 
 DATABASE_ROUTERS = ['osf.db.router.PostgreSQLFailoverRouter', ]
 CELERY_IMPORTS = [
