@@ -289,7 +289,6 @@ class AbstractNode(DirtyFieldsMixin, TypedModel, AddonModelMixin, IdentifierMixi
         if self is parent_node:
             return self
 
-        print(self.parent_node.nodes)
         self._parent = parent_node
         parent_node.nodes.append(self)
         parent_node.save()
@@ -298,6 +297,16 @@ class AbstractNode(DirtyFieldsMixin, TypedModel, AddonModelMixin, IdentifierMixi
         super(AbstractNode, self).save()
         return self
 
+    def remove_forked_reference(self):
+        """Delete the fork of a node.
+        :return: node
+        """
+        self.forked_from = None
+        self.forked_date = None
+        self.is_fork = False
+        super(AbstractNode, self).save()
+
+        return self
 
     @property
     def contributors(self):
