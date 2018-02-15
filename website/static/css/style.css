@@ -214,6 +214,11 @@ a {
     }
     .osf-navbar-logo {
         margin-top: 0px !important;
+        float: left;
+        margin-right: 8px;
+        background-size: 100%;
+        width: 120px;
+        height: 42px;
     }
 
     .name-div {

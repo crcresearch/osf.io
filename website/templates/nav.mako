@@ -4,7 +4,6 @@
 
 <nav class="navbar navbar-inverse navbar-fixed-top" id="navbarScope" role="navigation">
     <div class="container">
-<<<<<<< HEAD
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#secondary-navigation" aria-label="Toggle secondary navigation"}}>
                 <span class="sr-only">Toggle navigation</span>
@@ -12,8 +11,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-        <a class="navbar-brand hidden-sm hidden-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
-        <a class="navbar-brand visible-sm visible-xs" href="https://craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
+        <a class="navbar-brand hidden-sm hidden-xs" href="https://dev.craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> <span style="margin-top:8px;">REPOSITORY</span></a>
+        <a class="navbar-brand visible-sm visible-xs" href="https://dev.craftproject.org/"><img src="/static/img/craft.png" class="osf-navbar-logo" width="27" alt="COS logo"/> </a>
+<!--
         <div class="service-name">
             <a href="${service_url}">
                 <span class="hidden-xs"> REPOSITORY </span>
@@ -26,11 +26,12 @@
             </button>
             <ul class="dropdown-menu service-dropdown" role="menu">
                 <li><a data-bind="click: trackClick.bind($data, 'Home')" href="${domain}"><b>HOME</b></a></li>
-                <!--<li><a data-bind="click: trackClick.bind($data, 'Preprints')" href="${domain}preprints/">OSF<b>PREPRINTS</b></a></li>
-                <li><a data-bind="click: trackClick.bind($data, 'Registries')" href="${domain}registries/">OSF<b>REGISTRIES</b></a></li>-->
+                <li><a data-bind="click: trackClick.bind($data, 'Preprints')" href="${domain}preprints/">OSF<b>PREPRINTS</b></a></li>
+                <li><a data-bind="click: trackClick.bind($data, 'Registries')" href="${domain}registries/">OSF<b>REGISTRIES</b></a></li>
                 <li><a data-bind="click: trackClick.bind($data, 'Meetings')" href="${domain}meetings/">OSF<b>MEETINGS</b></a></li>
             </ul>
         </div>
+-->
     </div>
     <div id="navbar" class="navbar-collapse collapse navbar-right">
         <ul class="nav navbar-nav"></ul>
@@ -38,6 +39,7 @@
 
     <div class="navbar-collapse collapse navbar-right" id="secondary-navigation">
         <ul class="nav navbar-nav">
+<!--
             <li>
                 <a href="https://dev.craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
             </li>
@@ -50,6 +52,7 @@
             <li class="dropdown">
             <a id="navbar-support" data-bind="click: trackClick.bind($data, '${service_name} Support')" href="${service_support_url}">Support</a>
             </li>
+-->
             <!--<li class="navbar-donate-button"><a id="navbar-donate" data-bind="click: trackClick.bind($data, 'Donate')" href="https://cos.io/donate">Donate</a></li>-->
             % if user_name and display_name:
             <li class="dropdown">
@@ -60,9 +63,15 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu auth-dropdown" role="menu">
+                <li>
+                  <a href="https://dev.craftproject.org/"><i class="fa fa-dashboard fa-lg p-r-xs"></i>    Dashboard</a>
+                </li>
+                <li>
+                  <a href="/myprojects/"><i class="fa fa-th-large fa-lg p-r-xs"></i>    My Projects</a>
+                </li>
                 <li><a data-bind="click: trackClick.bind($data, 'MyProfile')" href="${domain}profile/"><i class="fa fa-user fa-lg p-r-xs"></i> My Profile</a></li>
                 <!--<li><a data-bind="click: trackClick.bind($data, 'Support')" href="${domain}support/" ><i class="fa fa-life-ring fa-lg p-r-xs"></i> OSF Support</a></li>-->
-                <li><a data-bind="click: trackClick.bind($data, 'Settings')" href="${web_url_for('user_profile')}"><i class="fa fa-cog fa-lg p-r-xs"></i> Settings</a></li>
+                <li><a data-bind="click: trackClick.bind($data, 'Settings')" href="${web_url_for('user_profile')}"><i class="fa fa-gears fa-lg p-r-xs"></i> Settings</a></li>
                 <li><a data-bind="click: trackClick.bind($data, 'Logout')" href="${web_url_for('auth_logout')}"><i class="fa fa-sign-out fa-lg p-r-xs"></i> Log out</a></li>
             </ul>
             </li>

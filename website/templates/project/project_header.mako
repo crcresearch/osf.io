@@ -41,7 +41,7 @@
                             </a>
                         </li>
                         <li id="projectNavAdmin">
-                            <a href="https://craftproject.org/flow/${ node['id'] }">
+                            <a href="https://dev.craftproject.org/flow/${ node['id'] }">
                                	Craft 
                             </a>
                         </li>
