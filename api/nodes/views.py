@@ -120,12 +120,8 @@ from addons.wiki.models import NodeWikiPage
 from website.util.permissions import ADMIN, PERMISSIONS
 
 from website import settings, mails
-#from website.addons.wiki.model import NodeWikiPage
 from website.exceptions import NodeStateError
 from website.util.time import throttle_period_expired
-#from website.models import Node, Pointer, Comment, NodeLog, Institution, DraftRegistration, PrivateLink, PreprintService
-#from website.files.models import FileNode
-#from framework.auth.core import User
 
 
 class NodeMixin(object):
@@ -626,8 +622,9 @@ class NodeRequestAccess(APIView, UserMixin, NodeMixin):
         project = self.get_node()
         contributors = project.contributors
         project_admin = self.get_user(check_permissions=False)
+        contrib_ids = set(contrib._id for contrib in contributors)
         try:
-            if project_admin._id not in contributors:
+            if project_admin._id not in contrib_ids:
                 raise Exception('The user you are trying to contact is not a member of this project.')
             if throttle_period_expired(requester.email_last_sent, settings.SEND_EMAIL_THROTTLE):
                 link_to_contributors = settings.DOMAIN+project._id+'/contributors/'
