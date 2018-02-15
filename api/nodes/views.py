@@ -570,7 +570,8 @@ class NodeAdopt(generics.UpdateAPIView, UserMixin, NodeMixin):
         try:
             project = self.get_node()
             parent_id = request.data['parent']
-            parent_node = Node.find(Q('_id', 'eq', parent_id))[0]
+            guid_row = Guid.objects.get(_id=parent_id)
+            parent_node = AbstractNode.objects.filter(id=guid_row.object_id)[0]
             project = project.adopt(parent_node=parent_node)
         except Exception as e:
             return HttpResponse(e, status=status.HTTP_400_BAD_REQUEST)
