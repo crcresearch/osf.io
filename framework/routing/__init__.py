@@ -24,6 +24,7 @@ from website import settings
 logger = logging.getLogger(__name__)
 
 TEMPLATE_DIR = settings.TEMPLATES_PATH
+ROOT_DIR = settings.ROOT_DIR
 
 _TPL_LOOKUP = TemplateLookup(
     default_filters=[
@@ -217,7 +218,7 @@ def render_mako_string(tpldir, tplname, data, trust=True):
     :param trust: Optional. If ``False``, markup-save escaping will be enabled
     """
 
-    show_errors = settings.DEBUG_MODE  # thanks to abought
+    show_errors = True  # settings.DEBUG_MODE  # thanks to abought
     # TODO: The "trust" flag is expected to be temporary, and should be removed
     #       once all templates manually set it to False.
 
@@ -225,17 +226,22 @@ def render_mako_string(tpldir, tplname, data, trust=True):
 
     tpl = mako_cache.get(tplname)
     if tpl is None:
-        with open(os.path.join(tpldir, tplname)) as f:
-            tpl_text = f.read()
-        tpl = Template(
-            tpl_text,
-            format_exceptions=show_errors,
-            lookup=lookup_obj,
-            input_encoding='utf-8',
-            output_encoding='utf-8',
-            default_filters=lookup_obj.template_args['default_filters'],
-            imports=lookup_obj.template_args['imports']  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
-        )
+        try:
+            tpldir = os.path.normpath(os.path.join(ROOT_DIR, os.path.relpath(tpldir)))
+            tpl = os.path.join(tpldir, tplname)
+            with open(tpl) as f:
+                tpl_text = f.read()
+            tpl = Template(
+                tpl_text,
+                format_exceptions=show_errors,
+                lookup=lookup_obj,
+                input_encoding='utf-8',
+                output_encoding='utf-8',
+                default_filters=lookup_obj.template_args['default_filters'],
+                imports=lookup_obj.template_args['imports']  # FIXME: Temporary workaround for data stored in wrong format in DB. Unescape it before it gets re-escaped by Markupsafe. See [#OSF-4432]
+            )
+        except Exception as E:
+            print("(framework.__init__.render_mako_string): opening tpl failed ", E)
     # Don't cache in debug mode
     if not app.debug:
         mako_cache[tplname] = tpl
@@ -405,13 +411,21 @@ class WebRenderer(Renderer):
 
     # TODO: Should be a function, not a method
     def detect_renderer(self, renderer, filename):
+        # print("(WebRenderer.detect_renderer): Begin")
         if renderer:
+            # print("(WebRenderer.detect_renderer): End in return renderer")
             return renderer
 
         try:
             _, extension = os.path.splitext(filename)
+            # print("(WebRenderer.detect_renderer): _ == ", _)
+            # print("(WebRenderer.detect_renderer): extension == ", extension)
+            # print("(WebRenderer.detect_renderer): renderer_extension_map == ", renderer_extension_map)
+            # print("(WebRenderer.detect_renderer):  renderer_extension_map[extension] == ",  renderer_extension_map[extension])
+            # print("(WebRenderer.detect_renderer): End in try return")
             return renderer_extension_map[extension]
         except KeyError:
+            # print("(WebRenderer.detect_renderer): End in exception")
             raise KeyError(
                 'Could not infer renderer from file name: {}'.format(
                     filename
@@ -436,6 +450,7 @@ class WebRenderer(Renderer):
         :param template_dir: Path to template directory
 
         """
+        # print("(WebRenderer.__init__): Begin")
         self.template_name = template_name
         self.data = data or {}
         self.detect_render_nested = detect_render_nested
@@ -447,6 +462,7 @@ class WebRenderer(Renderer):
             error_renderer,
             self.error_template
         )
+        # print("(WebRenderer.__init__): End")
 
     def handle_error(self, error):
         """Handle an HTTPError.
@@ -550,6 +566,10 @@ class WebRenderer(Renderer):
         # todo: add debug parameter
         try:
             # TODO: Seems like Jinja2 and handlebars renderers would not work with this call sig
+            # print(" template_dir=", self.template_dir)
+            # print(" template_name=", template_name)
+            # print(" data=", data)
+            # print(" trust=", self.trust)
             rendered = renderer(self.template_dir, template_name, data, trust=self.trust)
         except IOError:
             return '<div>Template {} not found.</div>'.format(template_name)
