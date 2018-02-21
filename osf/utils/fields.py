@@ -60,7 +60,7 @@ class EncryptedTextField(models.TextField):
                 value = jwe.decrypt(bytes(value[len(self.prefix):]), SENSITIVE_DATA_KEY)
             except InvalidTag:
                 # Allow use of an encrypted DB locally without decrypting fields
-                if settings.DEBUG_MODE:
+                if True:  # settings.DEBUG_MODE:
                     pass
                 else:
                     raise
